@@ -187,7 +187,7 @@ bool factory_edit_frame_t::action_triggered( gui_action_creator_t *comp,value_t 
 		if (comp==&inp_production) {
 			production = inp_production.get_value();
 		}
-		else if(  comp==&bt_left_rotate  &&  rotation!=255) {
+		else if(  comp==&bt_left_rotate  &&  rotation!=254) {
 			if(rotation==0) {
 				rotation = 255;
 			}
@@ -321,6 +321,9 @@ void factory_edit_frame_t::change_item_info(sint32 entry)
 		if(rotation == 255) {
 			tstrncpy(rot_str, translator::translate("random"), lengthof(rot_str));
 		}
+		else if(rotation == 254) {
+			tstrncpy(rot_str, translator::translate("auto"), lengthof(rot_str));
+		}
 		else {
 			sprintf( rot_str, "%i", rotation );
 		}
@@ -332,7 +335,7 @@ void factory_edit_frame_t::change_item_info(sint32 entry)
 		}
 
 		const building_desc_t *desc = fac_desc->get_building();
-		uint8 rot = (rotation==255) ? 0 : rotation;
+		uint8 rot = (rotation>253) ? 0 : rotation;
 		if(desc->get_x(rot)==1) {
 			if(desc->get_y(rot)==1) {
 				img[3].set_image( desc->get_tile(rot,0,0)->get_background(0,0,0) );
@@ -356,7 +359,7 @@ void factory_edit_frame_t::change_item_info(sint32 entry)
 		}
 
 		// the tools will be always updated, even though the data up there might be still current
-		sprintf( param_str, "%i%c%i,%s", bt_climates.pressed, rotation==255 ? '#' : '0'+rotation, production, fac_desc->get_name() );
+		sprintf( param_str, "%i%c%i,%s", bt_climates.pressed, rotation>253 ? (rotation==254 ? 'A' : '#') : '0'+rotation, production, fac_desc->get_name() );
 		if(bt_land_chain.pressed) {
 			welt->set_tool( &land_chain_tool, player );
 		}

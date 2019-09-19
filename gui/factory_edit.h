@@ -26,7 +26,7 @@ private:
 
 	const factory_desc_t *fac_desc;
 	uint32 production;
-	uint8 rotation; //255 for any
+	uint8 rotation; // 255 for random, 254 for auto
 
 	char prod_str[32], rot_str[16];
 

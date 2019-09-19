@@ -6633,6 +6633,19 @@ bool tool_build_land_chain_t::init( player_t * )
  * next number is production value
  * finally industry name
  */
+
+/* This is practically the same as tool_build_factory_t::work(...)
+ * other than this calling factory_builder_t::build_link() [which
+ * returns an integer count] and that calling
+ * factory_builder_t::build_factory() which returns a fabrik_t*.
+ * These two routines should be merged, although I have no idea yet
+ * how to combine the routines of the two classes together.
+ * 
+ * Furthermore, is_area_ok() in bauer/fabrikbauer.cc knows the
+ * location of the road adjoining the new factory, but it has no way
+ * to tell us!  We need to know that so we can choose the proper
+ * rotation. — WL
+ */
 const char *tool_build_land_chain_t::work( player_t *player, koord3d pos )
 {
 	const grund_t* gr = welt->lookup_kartenboden(pos.get_2d());
@@ -6653,6 +6666,9 @@ const char *tool_build_land_chain_t::work( player_t *player, koord3d pos )
 	if(fab==NULL) {
 		return "";
 	}
+        // Factories of 1x1 size should regard 'A' Auto rotation, looking for streets using the neighbours[] array as in ::work(),
+        // preferably reusing that code.  Also, 
+        printf("  BUILD: rot=%c\n", default_param[1]);
 	int rotation = (default_param  &&  default_param[1]!='#') ? (default_param[1]-'0') % fab->get_building()->get_all_layouts() : simrand(fab->get_building()->get_all_layouts()-1, "const char *tool_build_land_chain_t::work");
 	koord size = fab->get_building()->get_size(rotation);
 

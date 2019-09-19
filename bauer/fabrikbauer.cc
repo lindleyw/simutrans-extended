@@ -149,6 +149,9 @@ public:
 					// Border (because previous clause didn't trigger) but not corner.
 					// Look for a road.
 					next_to_road = gr->hat_weg(road_wt);
+                                        if (next_to_road) {
+                                          printf (" FACTORY BUILDER (%d,%d) road at (%d,%d)\n", pos.x, pos.y, k.x, k.y);
+                                        }
 				}
 			}
 		}
