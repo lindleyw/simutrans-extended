@@ -3905,7 +3905,7 @@ void stadt_t::check_bau_factory(bool new_town)
 	// be very high in Pak128.Britain-Ex, leading to too many industries
 	// being built in towns. 
 
-	const uint32 const increase_interval = welt->get_settings().get_industry_increase_every();
+	const uint32 increase_interval = welt->get_settings().get_industry_increase_every();
 	const uint32 population_ratio = increase_interval ? ((uint32)city_history_month[0][HIST_CITICENS] * 1000) / increase_interval : 0;
 	uint32 industry_count = get_number_of_consumer_industries();
 	const uint32 industry_ratio = industry_count * 1000;
