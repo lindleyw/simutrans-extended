@@ -1065,7 +1065,21 @@ grund_t* private_car_t::hop_check()
 				const strasse_t* str = (strasse_t*)next_way;
 				const bool backwards = dir_next == ribi_t::backward(current_dir);
 
-				const bool direction_allowed = str->get_ribi() & dir_next; 
+				bool direction_allowed = str->get_ribi() & dir_next; 
+				if (!direction_allowed && str->is_diagonal())
+				{
+					// Allowed directions with diagonals require more calculation.
+					const koord3d pos_next_next_next = next_way->private_car_routes[weg_t::private_car_routes_currently_reading_element].get(check_target);
+					if (pos_next_next_next != koord3d::invalid)
+					{
+						const ribi_t::ribi dir_next_next = ribi_type(pos_next_next, pos_next_next_next);
+						direction_allowed = str->get_ribi() & dir_next_next;
+					}
+					else
+					{
+						direction_allowed = true;
+					}
+				}
 
 				if (!direction_allowed)
 				{
@@ -1105,8 +1119,13 @@ grund_t* private_car_t::hop_check()
 
 		static weighted_vector_tpl<koord3d> poslist(4);
 		poslist.clear();
+		bool city_exit = false;
 		for (uint32 n = 0; n < 2; n++)
 		{
+			if (n == 0)
+			{
+				city_exit = false;
+			}
 			if (!poslist.empty())
 			{
 				break;
@@ -1146,7 +1165,7 @@ grund_t* private_car_t::hop_check()
 						// (e.g. if there is a one way road).
 						const planquadrat_t* tile = welt->access(pos_next.get_2d());
 						const stadt_t* current_city = tile ? tile->get_city() : NULL;
-						if (current_city && n == 0 && !welt->get_settings().get_assume_everywhere_connected_by_road())
+						if (current_city && (n == 0 || city_exit) && !welt->get_settings().get_assume_everywhere_connected_by_road())
 						{
 							planquadrat_t* tile = welt->access(to->get_pos().get_2d());
 							const stadt_t* next_tile_city = tile ? tile->get_city() : NULL;
@@ -1160,6 +1179,7 @@ grund_t* private_car_t::hop_check()
 								// We have checked whether this is on a route above, so if we reach here, we assume that this
 								// city exit tile is not on a route.
 								weg = from->get_weg(road_wt);
+								city_exit = true;
 								continue;
 							}
 						}
