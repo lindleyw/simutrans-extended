@@ -1619,9 +1619,9 @@ void gebaeude_t::rdwr(loadsave_t *file)
 	}
 	else
 	{
-        	sint64 month_start = (purchase_time - welt->get_settings().get_starting_month() - welt->get_settings().get_starting_year()*12) *
+		sint64 month_start = (purchase_time - welt->get_settings().get_starting_month() - welt->get_settings().get_starting_year()*12) *
         		welt->ticks_per_world_month;
-        	file->rdwr_longlong(file->is_saving() ? month_start : construction_start);
+		file->rdwr_longlong(file->is_saving() ? month_start : construction_start);
 	}
         if (!file->is_saving()) { // stepping year in game results in mismatch of Ticks vs. Year/Month; avoid updating here
         	purchase_time = (construction_start / welt->ticks_per_world_month)+welt->get_settings().get_starting_month()+
