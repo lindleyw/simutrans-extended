@@ -4023,7 +4023,7 @@ bool fabrik_t::has_goods_catg_demand(uint8 catg_index) const
 				continue;
 			}
 			if (input[index].get_typ()->get_catg_index() == catg_index) {
-				return true; 
+				return true;
 			}
 		}
 	}
