@@ -7126,12 +7126,23 @@ bool tool_build_land_chain_t::init( player_t * )
  * the parameter string is a follow:
  * 1#34,oelfeld
  * first letter: ignore climates
- * second letter: rotation (0,1,2,3,#=random)
+ * second letter: rotation (0,1,2,3,#=random,A=auto)
  * next number is production value
  * finally industry name
  */
+
+/* This is practically the same as tool_build_factory_t::work(...)
+ * other than this calling factory_builder_t::build_link() [which
+ * returns an integer count] and that calling
+ * factory_builder_t::build_factory() which returns a fabrik_t*.
+ * These two routines (methods) should probably be merged, although I
+ * am yet unsure how to combine the parts of the two classes
+ * together. — WL
+ */
 const char *tool_build_land_chain_t::work( player_t *player, koord3d pos )
 {
+	koord k(pos.get_2d());
+
 	const grund_t* gr = welt->lookup_kartenboden(pos.get_2d());
 	if(gr==NULL) {
 		return "";
@@ -7157,7 +7168,25 @@ const char *tool_build_land_chain_t::work( player_t *player, koord3d pos )
 	if(fab==NULL) {
 		return "";
 	}
-	int rotation = (default_param  &&  default_param[1]!='#') ? (default_param[1]-'0') % fab->get_building()->get_all_layouts() : simrand(fab->get_building()->get_all_layouts()-1, "const char *tool_build_land_chain_t::work");
+	int rotation;
+	if(  !default_param || default_param[1]=='#'  ) {
+		rotation = simrand(fab->get_building()->get_all_layouts(), "const char *tool_build_land_chain_t::work");
+	}
+	else if(  default_param[1]=='A'  ) {
+		int streetdir = 0;
+                // Convert 'neighbors' indices to SENW bits
+                static int const neighbours_to_senw[] = { 0x0c, 0x08, 0x09, 0x01, 0x03, 0x02, 0x06, 0x04 };
+		for(  int i = 1;  i < 8;  i+=2  ) {
+			grund_t *gr2 = welt->lookup_kartenboden(k + koord::neighbours[i]);
+			if(  gr2  &&  gr2->get_weg_hang() == gr2->get_grund_hang()  &&  gr2->get_weg(road_wt) != NULL  ) {
+				streetdir |= neighbours_to_senw[i];
+			}
+		}
+		rotation = building_layout[streetdir];
+        }
+	else {
+		rotation = (default_param[1]-'0') % fab->get_building()->get_all_layouts();
+	}
 	koord size = fab->get_building()->get_size(rotation);
 
 	// process ignore climates switch
@@ -7310,6 +7339,8 @@ bool tool_build_factory_t::init( player_t * )
 /* builds an industry next to the cursor (default_param see above) */
 const char *tool_build_factory_t::work( player_t *player, koord3d pos )
 {
+	koord k(pos.get_2d());
+
 	const grund_t* gr = welt->lookup_kartenboden(pos.get_2d());
 	if(gr==NULL) {
 		return "";
@@ -7329,7 +7360,34 @@ const char *tool_build_factory_t::work( player_t *player, koord3d pos )
 	if(fab==NULL) {
 		return "";
 	}
-	int rotation = (default_param  &&  default_param[1]!='#') ? (default_param[1]-'0') % fab->get_building()->get_all_layouts() : simrand(fab->get_building()->get_all_layouts(), "const char *tool_build_factory_t::work");
+	int rotation;
+	if(  !default_param || default_param[1]=='#'  ) {
+		rotation = simrand(fab->get_building()->get_all_layouts(), "const char *tool_build_factory_t::work");
+	}
+	else if(  default_param[1]=='A'  ) {
+		int streetdir = 0;
+                // Convert 'neighbors' indices to SENW bits
+		static int const neighbours_to_senw[] = { 0x0c, 0x08, 0x09, 0x01, 0x03, 0x02, 0x06, 0x04 };
+		for(  int i = 1;  i < 8;  i+=2  ) {
+			grund_t *gr2 = welt->lookup_kartenboden(k + koord::neighbours[i]);
+			if(  gr2  &&  gr2->get_weg_hang() == gr2->get_grund_hang()  &&  gr2->get_weg(road_wt) != NULL  ) {
+				streetdir |= neighbours_to_senw[i];
+			}
+		}
+                if (streetdir == 0) { // No adjacent streets; check diagonally
+                  for(  int i = 0;  i < 8;  i+=2  ) {
+                    grund_t *gr2 = welt->lookup_kartenboden(k + koord::neighbours[i]);
+                    if(  gr2  &&  gr2->get_weg_hang() == gr2->get_grund_hang()  &&  gr2->get_weg(road_wt) != NULL  ) {
+                      streetdir |= neighbours_to_senw[i];
+                    }
+                  }
+                }
+		rotation = building_layout[streetdir];
+        }
+	else {
+		rotation = (default_param[1]-'0') % fab->get_building()->get_all_layouts();
+	}
+
 	koord size = fab->get_building()->get_size(rotation);
 
 	// process ignore climates switch

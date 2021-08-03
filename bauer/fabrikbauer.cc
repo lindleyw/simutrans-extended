@@ -689,7 +689,40 @@ int factory_builder_t::build_link(koord3d* parent, const factory_desc_t* info, s
 			k1 = factory_site_searcher_t(welt, factory_desc_t::City).find_place(city->get_pos(), size.y, size.x, cl, regions_allowed);
 		}
 
-		rotate = simrand( info->get_building()->get_all_layouts(), " factory_builder_t::build_link" );
+
+                int streetdir = 0;
+                if (size.x == 1 && size.y == 1) {
+                  static int const neighbours_to_senw[] = { 0x0c, 0x08, 0x09, 0x01, 0x03, 0x02, 0x06, 0x04 };
+                  for ( int i = 1;  i < 8;  i+=2  ) {
+                    grund_t *gr2 = welt->lookup_kartenboden(k + koord::neighbours[i]);
+                    if ( gr2  &&  gr2->get_weg_hang() == gr2->get_grund_hang()  &&  gr2->get_weg(road_wt) != NULL  ) {
+                      // update directions - note this is SENW, conversion from neighbours to SENW is
+                      // neighbours SENW   Bits in building_layout
+                      // 3          0      0x01
+                      // 5          1      0x02
+                      // 7          2      0x04
+                      // 1          3      0x08
+                      streetdir |= neighbours_to_senw[i];
+                    }
+                  }
+                  if (streetdir == 0) { // No adjacent streets; check diagonally
+                    for(  int i = 0;  i < 8;  i+=2  ) {
+                      grund_t *gr2 = welt->lookup_kartenboden(k + koord::neighbours[i]);
+                      if(  gr2  &&  gr2->get_weg_hang() == gr2->get_grund_hang()  &&  gr2->get_weg(road_wt) != NULL  ) {
+                        streetdir |= neighbours_to_senw[i];
+                      }
+                    }
+                  }
+                }
+
+                if (streetdir == 0) { // No adjacent streets; choose random rotation
+                  rotate = simrand( info->get_building()->get_all_layouts(), " factory_builder_t::build_link" );
+                } else {
+                  // Copied from simtool.cc, this converts senw to desired rotations.
+                  static int const building_layout[] = { 0, 0, 1, 4, 2, 0, 5, 1, 3, 7, 1, 0, 6, 3, 2, 0 };
+                  rotate = building_layout[streetdir];
+                }
+
 		if (k1 == koord::invalid) {
 			if (size.x != size.y) {
 				rotate &= 2; // rotation must be even number
@@ -699,6 +732,7 @@ int factory_builder_t::build_link(koord3d* parent, const factory_desc_t* info, s
 			k = k1;
 			rotate |= 1; // rotation must be odd number
 		}
+
 		if (!info->get_building()->can_rotate()) {
 			rotate = 0;
 		}
