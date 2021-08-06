@@ -30,6 +30,7 @@
 #include "vehicle_class_manager.h"
 
 #include "../display/simgraph.h"
+#include "../display/viewport.h"
 
 
 #define LOADING_BAR_WIDTH 150
@@ -760,7 +761,20 @@ bool convoi_detail_t::action_triggered(gui_action_creator_t *comp, value_t)
 	return false;
 }
 
-
+bool convoi_detail_t::infowin_event(const event_t *ev)
+{
+	if (cnv.is_bound() && formation.getroffen(ev->cx - formation.get_pos().x, ev->cy - D_TITLEBAR_HEIGHT  - scrolly_formation.get_pos().y)) {
+		if (IS_LEFTRELEASE(ev)) {
+			cnv->show_info();
+			return true;
+		}
+		else if (IS_RIGHTRELEASE(ev)) {
+			world()->get_viewport()->change_world_position(cnv->get_pos());
+			return true;
+		}
+	}
+	return gui_frame_t::infowin_event(ev);
+}
 
 void convoi_detail_t::rdwr(loadsave_t *file)
 {

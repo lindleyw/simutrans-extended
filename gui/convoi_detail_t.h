@@ -201,6 +201,8 @@ public:
 
 	bool action_triggered(gui_action_creator_t*, value_t) OVERRIDE;
 
+	bool infowin_event(event_t const*) OVERRIDE;
+
 	/**
 	 * called when convoi was renamed
 	 */
