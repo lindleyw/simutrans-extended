@@ -184,6 +184,9 @@ extend_edit_gui_t::extend_edit_gui_t(const char *name, player_t* player_) :
 	bt_climates.init( button_t::square_state, "ignore climates");
 	bt_climates.add_listener(this);
 	cont_options.add_component(&bt_climates);
+	bt_ignore_regions.init(button_t::square_state, "ignore regions");
+	bt_ignore_regions.add_listener(this);
+	cont_options.add_component(&bt_ignore_regions);
 
 	//setting scrollable content box
 	scrolly.set_visible(true);
@@ -223,6 +226,10 @@ bool extend_edit_gui_t::action_triggered( gui_action_creator_t *comp,value_t /* 
 	}
 	else if(  comp==&bt_climates  ) {
 		bt_climates.pressed ^= 1;
+		fill_list();
+	}
+	else if (comp == &bt_ignore_regions) {
+		bt_ignore_regions.pressed ^= 1;
 		fill_list();
 	}
 	else if(  comp==&bt_timeline  ) {

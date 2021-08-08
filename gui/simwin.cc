@@ -87,7 +87,7 @@ class inthashtable_tpl<ptrdiff_t, scr_size, N_BAGS_MEDIUM> saved_windowsizes;
 class simwin_gadget_flags_t
 {
 public:
-	simwin_gadget_flags_t(  ) : title(true), close( false ), help( false ), prev( false ), size( false ), next( false ), sticky( false ), gotopos( false ) { }
+	simwin_gadget_flags_t(  ) : title(true), close( false ), help( false ), prev( false ), size( false ), next( false ), sticky( false ), gotopos( false ), locked(false) { }
 
 	bool title:1;
 	bool close:1;
@@ -97,6 +97,7 @@ public:
 	bool next:1;
 	bool sticky:1;
 	bool gotopos:1;
+	bool locked:1;
 };
 
 class simwin_t
@@ -109,6 +110,7 @@ public:
 	gui_frame_t *gui;
 	uint16 gadget_state;    // which buttons to hilite
 	bool sticky;            // true if window is sticky
+	bool locked;            // true if window is locked
 	bool rollup;
 	bool dirty;
 
@@ -205,6 +207,12 @@ static int display_gadget_box(sint8 code,
 		else if(  code == SKIN_GADGET_PINNED  ) {
 			gadget_text = "S";
 		}
+		else if (code == SKIN_GADGET_NOTLOCKED) {
+			gadget_text = "l";
+		}
+		else if (code == SKIN_GADGET_LOCKED) {
+			gadget_text = "L";
+		}
 		display_proportional_rgb( x+4, y+4, gadget_text, ALIGN_LEFT, color_idx_to_rgb(COL_BLACK), false );
 	}
 
@@ -224,7 +232,8 @@ static int display_gadget_boxes(
 	PIXVAL darker,
 	uint16 gadget_state,
 	bool sticky_pushed,
-	bool goto_pushed
+	bool goto_pushed,
+	bool locked_pushed
 ) {
 	int width = 0;
 	const int k=(REVERSE_GADGETS?1:-1);
@@ -250,6 +259,9 @@ static int display_gadget_boxes(
 	}
 	if(  flags->sticky  ) {
 		width += k*display_gadget_box( sticky_pushed ? SKIN_GADGET_PINNED : SKIN_GADGET_NOTPINNED, x + width, y, lighter, darker, gadget_state & (1<<SKIN_GADGET_NOTPINNED) );
+	}
+	if ( flags->locked  ) {
+		width += k*display_gadget_box( locked_pushed ? SKIN_GADGET_LOCKED : SKIN_GADGET_NOTLOCKED, x + width, y, lighter, darker, gadget_state & (1 << SKIN_GADGET_NOTLOCKED));
 	}
 
 	return abs( width );
@@ -309,6 +321,12 @@ static sint8 decode_gadget_boxes(simwin_gadget_flags_t const * const flags, int 
 		}
 		offset += w;
 	}
+	if (flags->locked) {
+		if (offset >= 0 && offset < D_GADGET_WIDTH) {
+			return SKIN_GADGET_NOTLOCKED;
+		}
+		offset += w;
+	}
 	return SKIN_GADGET_COUNT;
 }
 
@@ -321,6 +339,7 @@ static void win_draw_window_title(const scr_coord pos, const scr_size size,
 		const uint16 gadget_state,
 		const bool sticky,
 		const bool goto_pushed,
+		const bool locked,
 		simwin_gadget_flags_t &flags )
 {
 	PUSH_CLIP_FIT(pos.x, pos.y, size.w, size.h);
@@ -328,8 +347,13 @@ static void win_draw_window_title(const scr_coord pos, const scr_size size,
 	PIXVAL lighter = display_blend_colors(title_color, color_idx_to_rgb(COL_WHITE), 25);
 	PIXVAL darker  = display_blend_colors(title_color, color_idx_to_rgb(COL_BLACK), 25);
 
-	// fill title bar with color
-	display_fillbox_wh_clip_rgb(pos.x, pos.y, size.w, D_TITLEBAR_HEIGHT, title_color, false);
+	if (sticky) {
+		display_blend_wh_rgb(pos.x, pos.y, size.w, D_TITLEBAR_HEIGHT, title_color, 60);
+	}
+	else {
+		// fill title bar with color
+		display_fillbox_wh_clip_rgb(pos.x, pos.y, size.w, D_TITLEBAR_HEIGHT, title_color, true);
+	}
 
 	// border of title bar
 	display_fillbox_wh_clip_rgb( pos.x + 1, pos.y,                         size.w - 2, 1, lighter, false ); // top
@@ -340,7 +364,10 @@ static void win_draw_window_title(const scr_coord pos, const scr_size size,
 
 	// Draw the gadgets and then move left and draw text.
 	flags.gotopos = (welt_pos != koord3d::invalid);
-	int width = display_gadget_boxes( &flags, pos.x+(REVERSE_GADGETS?0:size.w-D_GADGET_WIDTH), pos.y, lighter, darker, gadget_state, sticky, goto_pushed );
+	int width = display_gadget_boxes( &flags, pos.x+(REVERSE_GADGETS?0:size.w-D_GADGET_WIDTH), pos.y, lighter, darker, gadget_state, sticky, goto_pushed, locked );
+	if (sticky) {
+		display_proportional_clip_rgb(pos.x + (REVERSE_GADGETS?width+4:4)+1, pos.y+(D_TITLEBAR_HEIGHT-LINEASCENT)/2+1, text, ALIGN_LEFT, title_color, false);
+	}
 	int titlewidth = display_proportional_clip_rgb( pos.x + (REVERSE_GADGETS?width+4:4), pos.y+(D_TITLEBAR_HEIGHT-LINEASCENT)/2, text, ALIGN_LEFT, text_color, false );
 	if(  flags.gotopos  ) {
 		display_proportional_clip_rgb( pos.x + (REVERSE_GADGETS?width+4:4)+titlewidth+8, pos.y+(D_TITLEBAR_HEIGHT-LINEASCENT)/2, welt_pos.get_2d().get_fullstr(), ALIGN_LEFT, text_color, false );
@@ -572,6 +599,7 @@ void rdwr_all_win(loadsave_t *file)
 					i.pos.rdwr(file);
 					file->rdwr_byte(i.wt);
 					file->rdwr_bool(i.sticky);
+					file->rdwr_bool(i.locked);
 					file->rdwr_bool(i.rollup);
 					i.gui->rdwr(file);
 				}
@@ -654,8 +682,9 @@ void rdwr_all_win(loadsave_t *file)
 				uint8 win_type;
 				file->rdwr_byte( win_type );
 				create_win( p.x, p.y, w, (wintype)win_type, id );
-				bool sticky, rollup;
+				bool sticky, rollup, locked;
 				file->rdwr_bool( sticky );
+				file->rdwr_bool( locked );
 				file->rdwr_bool( rollup );
 				// now load the window
 				uint32 count = wins.get_count();
@@ -665,6 +694,7 @@ void rdwr_all_win(loadsave_t *file)
 				// ensure that the new status is to currently loaded window
 				if (wins.get_count() >= count) {
 					wins.back().sticky = sticky;
+					wins.back().locked = locked;
 					wins.back().rollup = rollup;
 				}
 			}
@@ -785,6 +815,7 @@ int create_win(scr_coord_val x, scr_coord_val y, gui_frame_t* const gui, wintype
 		win.flags.next = gui->has_next();
 		win.flags.size = gui->has_min_sizer();
 		win.flags.sticky = gui->has_sticky();
+		win.flags.locked = gui->has_sticky();
 		win.gui = gui;
 
 		// take care of time delete windows ...
@@ -794,6 +825,7 @@ int create_win(scr_coord_val x, scr_coord_val y, gui_frame_t* const gui, wintype
 		win.gadget_state = 0;
 		win.rollup = false;
 		win.sticky = false;
+		win.locked = false;
 		win.dirty = true;
 
 		// Notify window to be shown
@@ -958,6 +990,9 @@ bool destroy_win(const gui_frame_t *gui)
 
 	for(  uint i=0;  i<wins.get_count();  i++  ) {
 		if(wins[i].gui == gui) {
+			if ( wins[i].locked ) {
+				continue;
+			}
 			if(inside_event_handling==wins[i].gui) {
 				kill_list.append_unique(wins[i]);
 			}
@@ -985,7 +1020,7 @@ bool destroy_win(const gui_frame_t *gui)
 void destroy_all_win(bool destroy_sticky)
 {
 	for(  sint32 curWin = 0;  curWin < (sint32)wins.get_count();  curWin++  ) {
-		if(  destroy_sticky  ||  !wins[curWin].sticky  ) {
+		if(  !wins[curWin].locked  &&  (  destroy_sticky  ||  !wins[curWin].sticky  )  ) {
 			if(  inside_event_handling == wins[curWin].gui  ) {
 				// only add this, if not already added
 				kill_list.append_unique(wins[curWin]);
@@ -1105,6 +1140,7 @@ void display_win(int win)
 				wins[win].gadget_state,
 				wins[win].sticky,
 				comp->is_weltpos(),
+				wins[win].locked,
 				wins[win].flags );
 	}
 	if(  wins[win].dirty  ) {
@@ -1579,13 +1615,16 @@ bool check_pos_win(event_t *ev)
 								case SKIN_GADGET_NOTPINNED:
 									wins[i].sticky = !wins[i].sticky;
 									break;
+								case SKIN_GADGET_NOTLOCKED:
+									wins[i].locked = !wins[i].locked;
+									break;
 							}
 						}
 					}
 				}
 				else {
 					// Somewhere on the titlebar
-					if (IS_LEFTDRAG(ev)) {
+					if (IS_LEFTDRAG(ev) && !wins[i].sticky) {
 						i = top_win(i,false);
 						move_win(i, ev);
 						is_moving = i;

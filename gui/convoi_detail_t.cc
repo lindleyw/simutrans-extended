@@ -504,7 +504,10 @@ void convoi_detail_t::set_tab_opened()
 
 void convoi_detail_t::update_labels()
 {
-	lb_vehicle_count.buf().printf("%s %i (%s %i)", translator::translate("Fahrzeuge:"), cnv->get_vehicle_count(), translator::translate("Station tiles:"), cnv->get_tile_length());
+	lb_vehicle_count.buf().printf("%s %i", translator::translate("Fahrzeuge:"), cnv->get_vehicle_count());
+	if( cnv->front()->get_waytype()!=water_wt ) {
+		lb_vehicle_count.buf().printf(" (%s %i)", translator::translate("Station tiles:"), cnv->get_tile_length());
+	}
 	lb_vehicle_count.update();
 
 	vehicle_t* v1 = cnv->get_vehicle(0);

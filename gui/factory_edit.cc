@@ -402,7 +402,7 @@ void factory_edit_frame_t::change_item_info(sint32 entry)
 
 		// the tools will be always updated, even though the data up there might be still current
 		param_str.clear();
-		param_str.printf("%i%c%i,%s", bt_climates.pressed, rotation>253 ? (rotation==254 ? 'A' : '#') : '0'+rotation, production, fac_desc->get_name() );
+		param_str.printf("%i%i%c%i,%s", bt_climates.pressed, bt_ignore_regions.pressed, rotation>253 ? (rotation==254 ? 'A' : '#') : '0'+rotation, production, fac_desc->get_name() );
 		if(bt_land_chain.pressed) {
 			land_chain_tool.set_default_param(param_str);
 			welt->set_tool( &land_chain_tool, player );

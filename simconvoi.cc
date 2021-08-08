@@ -5775,7 +5775,7 @@ void convoi_t::hat_gehalten(halthandle_t halt)
 
 	// now find out station length
 	uint16 vehicles_loading=0;
-	if(  gr->is_water()  ) {
+	if(  gr->is_water()  ||  gr->hat_weg(water_wt)  ) {
 		// harbour has any size
 		vehicles_loading = vehicle_count;
 	}

@@ -77,6 +77,8 @@ groundobj_edit_frame_t::groundobj_edit_frame_t(player_t* player_) :
 	cont_scrolly.add_component(&groundobj_image);
 	cont_scrolly.new_component<gui_fill_t>(true, false);
 	cont_scrolly.new_component_span<gui_fill_t>(false, true, 2);
+
+	bt_ignore_regions.set_visible(false);
 }
 
 

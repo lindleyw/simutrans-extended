@@ -1159,6 +1159,8 @@ Idle:
 待機回数：
 ignore climates
 気候条件を無視する
+ignore regions
+地域条件を無視する
 In the industry legend show only currently existing factories
 現在存在する産業が取り扱っている貨物のみを表示します。
 In Transit
