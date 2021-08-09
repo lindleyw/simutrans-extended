@@ -6090,3 +6090,47 @@ Stops potentially within walking distance:
 Stops potentially within walking distance
 ignore regions
 Ignore regions
+gl_normal
+Fare/weight
+gl_prod
+Producers
+gl_con
+Consumers
+Open the fare calculation input field
+Show fare calculation settings
+player_stats
+Statistics
+Signalboxes
+Signal boxes
+way_distances
+Way kilometreage
+Electrified Distances
+Electrified kilometreage
+Active lines
+Active lines
+Signals/signs
+Signals/signs
+Vehicles
+Vehicles
+Total
+Total
+Monthly maintenance cost details
+Monthly maintenance cost details
+Number of depots per way type, and those monthly maintenance costs.
+Number of depots per way type, and the monthly maintenance cost of each
+hlptxt_mf_stations
+Number of stops per way type, and the monthly maintenance cost of each
+Number of signalboxes and total monthly maintenance costs.
+Number of signal boxes and their total monthly maintenance cost
+hlptxt_mf_way_distances
+The total kilometreage of each type of way together with the monthly maintenance cost of each
+hlptxt_mf_electrified_distances
+The total kilometreage of each type of electrified way together with the monthly maintenance cost of each
+Number of signals and signs per way type, and those monthly maintenance costs.
+The number of signals and signs of each way type and the monthly maintenance cost of each
+Number of active lines per way type.
+Number of active lines per way type
+Number of convoys per way type, and inactive convoys number in parentheses.
+Number of active for each way type, with those that are inactive shown in parentheses
+Number of vehicles per way type, and those monthly maintenance costs.
+Number of vehicles per way type and the monthly maintenance cost of each

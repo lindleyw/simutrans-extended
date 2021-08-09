@@ -44,6 +44,9 @@ extern int default_font_linespace;
 #define WAITINGBAR_HEIGHT 4
 #define LOADINGBAR_WIDTH 100
 
+#define D_ENTRY_NO_HEIGHT (LINESPACE+4)
+#define D_ENTRY_NO_WIDTH (proportional_string_width("188")+6)
+
 /**
 * Alignment enum to align controls against each other
 * Vertical and horizontal alignment can be masked together
@@ -287,6 +290,9 @@ enum {
 	BIDIRECTIONAL = 1,
 	HAS_POWER = 2
 };
+
+void display_convoy_arrow_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_val w, scr_coord_val h, PIXVAL color, bool dirty  CLIP_NUM_DEF CLIP_NUM_DEFAULT_ZERO);
+#define display_convoy_arrow_wh_clip( x, y, w, h, c, d ) display_convoy_arrow_wh_clip_rgb( (x), (y), (w), (h), specialcolormap_all_day[(c)&0xFF], (d))
 
 void display_vline_wh_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_val h, PIXVAL color, bool dirty);
 

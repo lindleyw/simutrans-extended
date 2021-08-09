@@ -4282,6 +4282,19 @@ void display_colorbox_with_tooltip(scr_coord_val xp, scr_coord_val yp, scr_coord
 }
 
 
+void display_convoy_arrow_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_val w, scr_coord_val h, PIXVAL color, bool dirty  CLIP_NUM_DEF)
+{
+	for (int x = 0; x < w; x++) {
+		if (x < (w + 1) / 2) {
+			display_vline_wh_clip_rgb(xp + x, yp + x, h - w / 2, color, dirty  CLIP_NUM_PAR);
+		}
+		else {
+			display_vline_wh_clip_rgb(xp + x, yp + w - x - 1, h - w / 2, color, dirty  CLIP_NUM_PAR);
+		}
+	}
+}
+
+
 /**
  * Draw vertical line
  */
@@ -4347,32 +4360,32 @@ void display_veh_form_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_
 
 	if (is_rightside) {
 		// right side of the bar - check only [next] parameter. check the alternate side if vehicle is reversed
-		display_fillbox_wh_clip_rgb(xp, yp, width - h / 2, h, color, dirty);
+		display_fillbox_wh_clip_rgb(xp, yp, width - h/2, h, color, dirty);
 
 		// draw right end >
 		if (basic_constraint_flags & vehicle_desc_t::unknown_constraint) {
-			display_fillbox_wh_clip_rgb(xp + width - h / 2, yp, h / 2, h, color, dirty);
+			display_fillbox_wh_clip_rgb(xp + width - h/2, yp, h/2, h, color, dirty);
 		}
 		else if (basic_constraint_flags & vehicle_desc_t::can_be_tail) {
 			display_pixel(xp + width - 1, yp+h/2, color);
 			// draw "tail" shape
 			if ((interactivity & BIDIRECTIONAL) == 0) {
 				// one directional (tail)
-				display_vline_wh_clip_rgb(xp + width - 1, yp, h / 2, color, dirty);
-				for (int i = 1; i < h / 2; ++i) {
-					display_vline_wh_clip_rgb(xp + width - 1 - i, yp, h / 2 + i + 1, color, dirty);
+				display_vline_wh_clip_rgb(xp + width - 1, yp, h/2, color, dirty);
+				for (int i = 1; i < h/2; ++i) {
+					display_vline_wh_clip_rgb(xp + width - 1 - i, yp, h/2 + i + 1, color, dirty);
 				}
 			}
 			else if (basic_constraint_flags & vehicle_desc_t::can_be_head) {
 				// cab end
-				for (int i = 1; i < h / 2; ++i) {
-					display_vline_wh_clip_rgb(xp + width -1 - i, yp + h / 2 - i, i * 2 + 1, color, dirty);
+				for (int i = 1; i < h/2; ++i) {
+					display_vline_wh_clip_rgb(xp + width -1 - i, yp + h/2 - i, i * 2 + 1, color, dirty);
 				}
 			}
 			else {
 				// tail end
 				display_vline_wh_clip_rgb(xp + width - 1, yp + 1, h - 2, color, dirty);
-				for (int i = 1; i < h / 2; ++i) {
+				for (int i = 1; i < h/2; ++i) {
 					display_vline_wh_clip_rgb(xp + width - 1 - i, yp, h, color, dirty);
 				}
 			}
@@ -4381,20 +4394,20 @@ void display_veh_form_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_
 			// intermediate end
 			display_pixel(xp + width - 1, yp, color);
 			display_pixel(xp + width - 1, yp+h-1, color);
-			for (int i = 1; i < h / 2; ++i) {
+			for (int i = 1; i < h/2; ++i) {
 				display_vline_wh_clip_rgb(xp + width - 1 - i, yp, h, color, dirty);
 			}
 		}
 		// un-powerd vehicle
 		if (!(interactivity & HAS_POWER)) {
-			display_blend_wh_rgb(xp, yp + 1, width - h / 2, h - 2, color_idx_to_rgb(COL_WHITE), 30);
+			display_blend_wh_rgb(xp, yp + 1, width - h/2, h - 2, color_idx_to_rgb(COL_WHITE), 30);
 			if ((interactivity & BIDIRECTIONAL)==0 && basic_constraint_flags & vehicle_desc_t::can_be_tail) {
-				display_pixel(xp + width - h / 2 - 1, yp + h - 2, color);
+				display_pixel(xp + width - h/2 - 1, yp + h - 2, color);
 			}
 			if (basic_constraint_flags & vehicle_desc_t::can_be_head) {
-				display_pixel(xp + width - h / 2 - 1, yp + h - 2, color);
+				display_pixel(xp + width - h/2 - 1, yp + h - 2, color);
 				if (interactivity & BIDIRECTIONAL) {
-					display_pixel(xp + width - h / 2 - 1, yp + 1, color);
+					display_pixel(xp + width - h/2 - 1, yp + 1, color);
 				}
 			}
 		}
@@ -4414,16 +4427,16 @@ void display_veh_form_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_
 
 		// < draw left end's base color
 		if (basic_constraint_flags & vehicle_desc_t::unknown_constraint) {
-			display_fillbox_wh_clip_rgb(xp + margin_left, yp, h / 2, h, color, dirty);
+			display_fillbox_wh_clip_rgb(xp + margin_left, yp, h/2, h, color, dirty);
 		}
 		else if (basic_constraint_flags & vehicle_desc_t::can_be_head) {
-			display_pixel(xp + margin_left, yp + h / 2, color);
+			display_pixel(xp + margin_left, yp + h/2, color);
 			// draw "head" shape
 			if((interactivity & BIDIRECTIONAL)==0){
 				// one directional (front)
 				display_vline_wh_clip_rgb(xp + margin_left, yp + h/2 + 1, h/2, color, dirty);
 				for (int i = 1; i < h/2; ++i) {
-					display_vline_wh_clip_rgb(xp + margin_left + i, yp + h / 2 - i, h/2 + i + 1, color, dirty);
+					display_vline_wh_clip_rgb(xp + margin_left + i, yp + h/2 - i, h/2 + i + 1, color, dirty);
 				}
 			}
 			else {
@@ -4444,24 +4457,24 @@ void display_veh_form_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_
 			// intermediate end
 			display_pixel(xp+margin_left, yp, color);
 			display_pixel(xp+margin_left, yp+h-1, color);
-			for (int i = 1; i < h / 2; ++i) {
+			for (int i = 1; i < h/2; ++i) {
 				display_vline_wh_clip_rgb(xp + margin_left + i, yp, h, color, dirty);
 			}
 		}
 		// un-powerd vehicle
 		if (!(interactivity & HAS_POWER)) {
-			display_blend_wh_rgb(xp + margin_left + h/2, yp + 1, width - h / 2, h - 2, color_idx_to_rgb(COL_WHITE), 30);
+			display_blend_wh_rgb(xp + margin_left + h/2, yp + 1, width - h/2, h - 2, color_idx_to_rgb(COL_WHITE), 30);
 			if (basic_constraint_flags & vehicle_desc_t::can_be_head) {
-				display_pixel(xp + margin_left + h / 2, yp + 1, color);
+				display_pixel(xp + margin_left + h/2, yp + 1, color);
 				if(interactivity & BIDIRECTIONAL){
-					display_pixel(xp + margin_left + h / 2, yp + h - 2, color);
+					display_pixel(xp + margin_left + h/2, yp + h - 2, color);
 				}
 			}
 		}
 
 		// draw the "coupler" line
 		//if (reversed ? basic_constraint_flags & vehicle_desc_t::fixed_coupling_next : basic_constraint_flags & vehicle_desc_t::fixed_coupling_prev) {
-		//	display_blend_wh(xp + margin_left - 2, yp + h / 2 -1, 3, h/2, COL_BLACK, 66);
+		//	display_blend_wh(xp + margin_left - 2, yp + h/2 -1, 3, h/2, COL_BLACK, 66);
 		//}
 		// -| permanent coupling
 		//if (reversed ? basic_constraint_flags & vehicle_desc_t::permanent_coupling_next : basic_constraint_flags & vehicle_desc_t::permanent_coupling_prev) {
