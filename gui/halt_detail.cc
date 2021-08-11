@@ -100,19 +100,20 @@ void halt_detail_t::init()
 
 	// route tab components
 	cont_route.set_table_layout(1,0);
-	cont_route.add_table(3, 1);
+	cont_route.add_table(4,1)->set_spacing(scr_size(0,0));
 	{
 		cont_route.set_margin(scr_size(D_H_SPACE, D_V_SPACE), scr_size(0, 0));
 
-		bt_by_station.init(button_t::roundbox_state, "hd_btn_by_station", scr_coord(0, 0), D_WIDE_BUTTON_SIZE);
-		bt_by_category.init(button_t::roundbox_state, "hd_btn_by_category", scr_coord(0, 0), D_WIDE_BUTTON_SIZE);
+		bt_by_station.init(button_t::roundbox_left_state, "hd_btn_by_station", scr_coord(0, 0), D_WIDE_BUTTON_SIZE);
+		bt_by_category.init(button_t::roundbox_right_state, "hd_btn_by_category", scr_coord(0, 0), D_WIDE_BUTTON_SIZE);
 		bt_by_station.add_listener(this);
 		bt_by_category.add_listener(this);
 		bt_by_station.pressed = false;
 		bt_by_category.pressed = true;
+		cont_route.new_component<gui_fill_t>();
 		cont_route.add_component(&bt_by_station);
 		cont_route.add_component(&bt_by_category);
-		cont_route.new_component<gui_fill_t>();
+		cont_route.new_component<gui_margin_t>(D_MARGIN_RIGHT);
 	}
 	cont_route.end_table();
 	lb_serve_catg.init("lb_served_goods_and_classes", scr_coord(0, 0),
@@ -141,13 +142,12 @@ void halt_detail_t::init()
 		{
 			for (uint8 c = 0; c < classes; c++) {
 				button_t *cb = new button_t();
-				char *class_name = new char[32]();
-				if (class_name != nullptr)
-				{
-					sprintf(class_name, "p_class[%u]", c);
-					pass_class_name_untranslated[c] = class_name;
+				cb->init(button_t::roundbox_state, goods_manager_t::get_translated_wealth_name(goods_manager_t::INDEX_PAS, c), scr_coord(0, 0), scr_size(CLASS_TEXT_BUTTON_WIDTH, D_BUTTON_HEIGHT));
+				if (classes>1) {
+					if (c == 0) { cb->set_typ(button_t::roundbox_left_state);  }
+					else if(c == classes-1) { cb->set_typ(button_t::roundbox_right_state); }
+					else { cb->set_typ(button_t::roundbox_middle_state); }
 				}
-				cb->init(button_t::roundbox_state, class_name, scr_coord(0, 0), scr_size(CLASS_TEXT_BUTTON_WIDTH, D_BUTTON_HEIGHT));
 				cb->disable();
 				cb->add_listener(this);
 				cont_route.add_component(cb);
@@ -177,13 +177,12 @@ void halt_detail_t::init()
 		{
 			for (uint8 c = 0; c < classes; c++) {
 				button_t *cb = new button_t();
-				char *class_name = new char[32]();
-				if (class_name != nullptr)
-				{
-					sprintf(class_name, "m_class[%u]", c);
-					mail_class_name_untranslated[c] = class_name;
+				cb->init(button_t::roundbox_state, goods_manager_t::get_translated_wealth_name(goods_manager_t::INDEX_MAIL, c), scr_coord(0, 0), scr_size(CLASS_TEXT_BUTTON_WIDTH, D_BUTTON_HEIGHT));
+				if (classes > 1) {
+					if (c == 0) { cb->set_typ(button_t::roundbox_left_state); }
+					else if (c == classes - 1) { cb->set_typ(button_t::roundbox_right_state); }
+					else { cb->set_typ(button_t::roundbox_middle_state); }
 				}
-				cb->init(button_t::roundbox_state, class_name, scr_coord(0, 0), scr_size(CLASS_TEXT_BUTTON_WIDTH, D_BUTTON_HEIGHT));
 				cb->disable();
 				cb->add_listener(this);
 				cont_route.add_component(cb);

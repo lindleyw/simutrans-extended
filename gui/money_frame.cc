@@ -323,10 +323,14 @@ void money_frame_t::init_stats()
 		// symbol
 		for (uint8 i = 0; i < TT_MAX_VEH-1; i++) {
 			if (depotlist_frame_t::is_available_wt( finance_t::translate_tt_to_waytype((transport_type)(i+1)) )) {
+				cont_stats.add_table(3,1);
+				cont_stats.new_component<gui_fill_t>();
 				cont_stats.new_component<gui_image_t>()->set_image(skinverwaltung_t::get_waytype_skin( finance_t::translate_tt_to_waytype((transport_type)(i+1)) )->get_image_id(0), true);
+				cont_stats.new_component<gui_fill_t>();
+				cont_stats.end_table();
 			}
 		}
-		cont_stats.new_component<gui_label_t>("Total");
+		cont_stats.new_component<gui_label_t>("Total", SYSCOL_TEXT_TITLE, gui_label_t::centered);
 
 		//-- buildings
 		// 1-2. depots
