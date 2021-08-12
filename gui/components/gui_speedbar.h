@@ -105,17 +105,19 @@ public:
 class gui_bandgraph_t : public gui_component_t
 {
 private:
-	sint32 total;
+	sint32 total = 0;
+	bool size_fixed;
 	struct info_t {
 		PIXVAL color;
 		const sint32 *value;
+		bool cylinder_style;
 	};
 	slist_tpl <info_t> values;
 
 public:
-	gui_bandgraph_t() { total = 0; }
+	gui_bandgraph_t(scr_size size = D_INDICATOR_SIZE, bool size_fixed_ = true) { set_size(size); size_fixed=size_fixed_; }
 
-	void add_color_value(const sint32 *value, PIXVAL color);
+	void add_color_value(const sint32 *value, PIXVAL color, bool cylinder_style=false);
 
 	void draw(scr_coord offset) OVERRIDE;
 

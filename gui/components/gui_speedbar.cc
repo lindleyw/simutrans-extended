@@ -222,20 +222,20 @@ scr_size gui_routebar_t::get_max_size() const
 }
 
 
-void gui_bandgraph_t::add_color_value(const sint32 *value, PIXVAL color)
+void gui_bandgraph_t::add_color_value(const sint32 *value, PIXVAL color, bool cylinder_style)
 {
-	info_t next = { color, value };
+	info_t next = { color, value, cylinder_style };
 	values.insert(next);
 }
 
 scr_size gui_bandgraph_t::get_min_size() const
 {
-	return D_INDICATOR_SIZE;
+	return size;
 }
 
 scr_size gui_bandgraph_t::get_max_size() const
 {
-	return scr_size(scr_size::inf.w, D_INDICATOR_HEIGHT);
+	return scr_size(size_fixed ? get_min_size().w : scr_size::inf.w, size.h);
 }
 
 void gui_bandgraph_t::draw(scr_coord offset)
@@ -258,7 +258,12 @@ void gui_bandgraph_t::draw(scr_coord offset)
 				const scr_coord_val from = size.w * temp / total + 0.5;
 				const scr_coord_val width = from-end;
 				if (width) {
-					display_fillbox_wh_clip_rgb(offset.x + size.w - from, offset.y, width, size.h, i.color, true);
+					if (i.cylinder_style) {
+						display_cylinderbar_wh_clip_rgb(offset.x + size.w - from, offset.y, width, size.h, i.color, true);
+					}
+					else {
+						display_fillbox_wh_clip_rgb(offset.x + size.w - from, offset.y, width, size.h, i.color, true);
+					}
 				}
 				end += width;
 			}

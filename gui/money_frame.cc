@@ -40,7 +40,7 @@
 #include "../descriptor/way_desc.h"
 #include "../descriptor/building_desc.h"
 #include "../descriptor/tunnel_desc.h"
-#include "../vehicle/simvehicle.h"
+#include "../vehicle/vehicle.h"
 #include "halt_list_frame.h"
 #include "schedule_list.h"
 #include "convoi_frame.h"

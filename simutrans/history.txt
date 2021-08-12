@@ -18,6 +18,7 @@
 	FIX: Crash when liquidating company owning a house
 	ADD: chat window transparency in network mode now controlled by theme: gui_color_chat_window_network_transparency and gui_chat_window_network_transparency
 	CHG: search dialoges now consistent design, text search, preserved during saveload
+	ADD: menubar can be now top bottom left or right
 	ADD: reselect a tool will close it (new default, set by reselect_closes_tool in menuconf.tab)
 
 

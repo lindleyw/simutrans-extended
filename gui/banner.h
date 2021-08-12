@@ -23,6 +23,7 @@ private:
 		new_map,
 		load_map,
 		load_scenario,
+		options,
 		join_map,
 		quit;
 

@@ -3945,7 +3945,7 @@ Remove intermediate signals
 replace other signals
 Replace existing signals
 Hier warten/lagern:
-Sort passengers/freight by
+Waiting/transferring
 hlf_btn_alle
 all
 hlf_btn_invers
@@ -6088,6 +6088,10 @@ Total force acting in the opposite direction of the convoy
 The resistance acting on these vehicles at any given rate of speed up to the maximum
 Stops potentially within walking distance:
 Stops potentially within walking distance
+db_convoy_to
+To
+db_convoy_from
+From
 ignore regions
 Ignore regions
 gl_normal

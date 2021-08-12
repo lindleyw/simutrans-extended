@@ -853,6 +853,10 @@ Customers live in:
 顧客居住地:
 DAY_SYMBOL
 日
+db_convoy_to
+次の停車駅
+db_convoy_from
+前の停車駅
 deactivated in online mode
 ネットゲームでは使用できません
 Dec.

@@ -42,7 +42,7 @@
 #include "gui/simwin.h"
 #include "simworld.h"
 
-#include "vehicle/simpeople.h"
+#include "vehicle/pedestrian.h"
 
 #include "tpl/vector_tpl.h"
 #include "tpl/binary_heap_tpl.h"
@@ -53,7 +53,7 @@
 #include "boden/wasser.h"
 
 #include "old_blockmanager.h"
-#include "vehicle/simvehicle.h"
+#include "vehicle/vehicle.h"
 #include "vehicle/simroadtraffic.h"
 #include "vehicle/movingobj.h"
 #include "boden/wege/schiene.h"

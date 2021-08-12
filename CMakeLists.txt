@@ -448,9 +448,13 @@ add_executable(simutrans-extended
 	utils/simstring.cc
 	utils/simthread.cc
 	vehicle/movingobj.cc
-	vehicle/simpeople.cc
+	vehicle/pedestrian.cc
 	vehicle/simroadtraffic.cc
-	vehicle/simvehicle.cc
+	vehicle/vehicle.cc
+	vehicle/air_vehicle.cc
+	vehicle/rail_vehicle.cc
+	vehicle/road_vehicle.cc
+	vehicle/water_vehicle.cc
 )
 
 if (WIN32)

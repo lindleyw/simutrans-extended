@@ -892,21 +892,6 @@ public:
 	uint32 get_around_mail_generated() const;
 	uint32 get_around_mail_delivery_succeeded() const;
 
-	// @author: jamespetts
-	// Returns the percentage of unhappy people
-	// out of the total of happy and unhappy people.
-	uint16 get_unhappy_percentage(uint8 month) const
-	{
-		sint64 happy_count = financial_history[month][HALT_HAPPY];
-		sint64 unhappy_count = financial_history[month][HALT_UNHAPPY];
-		if (happy_count > 0) {
- 			return (uint16) (unhappy_count * 100 / (happy_count + unhappy_count) );
-		}
-		else {
-			return 0;
-		}
-	}
-
 	// Getting and setting average waiting times in minutes
 	// @author: jamespetts
 	uint32 get_average_waiting_time(halthandle_t halt, uint8 category, uint8 g_class);

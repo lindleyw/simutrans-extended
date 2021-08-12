@@ -15,7 +15,7 @@
 #include "components/gui_image.h"
 #include "components/gui_divider.h"
 
-#include "../vehicle/simvehicle.h"
+#include "../vehicle/vehicle.h"
 
 #define L_TIME_6_DIGITS_WIDTH (proportional_string_width("88:88:88")+6) // May be shared with another gui
 gui_times_history_t::gui_times_history_t(linehandle_t line_, convoihandle_t convoi_, bool line_reversed_display)
