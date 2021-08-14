@@ -4352,11 +4352,11 @@ void display_array_wh(scr_coord_val xp, scr_coord_val yp, scr_coord_val w, scr_c
 	}
 }
 
-void display_veh_form_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_val w, PIXVAL color, bool dirty, uint8 basic_constraint_flags, uint8 interactivity, bool is_rightside  CLIP_NUM_DEF_NOUSE)
+void display_veh_form_wh_clip_rgb(scr_coord_val xp, scr_coord_val yp, scr_coord_val w, scr_coord_val h, PIXVAL color, bool dirty, bool is_rightside, uint8 basic_constraint_flags, uint8 interactivity  CLIP_NUM_DEF_NOUSE)
 {
-	uint8 h = VEHICLE_BAR_HEIGHT;
-	uint8 width = (uint8)((w + 1) * 0.9);
-	uint8 margin_left = w - width;
+	if (h > 1 && h % 2 == 0) { h--; }
+	const uint8 width = (uint8)((w + 1) * 0.9);
+	const uint8 margin_left = w - width;
 
 	if (is_rightside) {
 		// right side of the bar - check only [next] parameter. check the alternate side if vehicle is reversed

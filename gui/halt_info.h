@@ -123,12 +123,23 @@ private:
 	button_t bt_arrivals, bt_departures;
 	gui_aligned_container_t cont_tab_departure, cont_departure;
 	gui_scrollpane_t scrolly_departure_board;
-	//bool show_departures=false;
+
 	enum {
 		SHOW_DEPARTURES = 1 << 1,
 		SHOW_LINE_NAME  = 1 << 2
 	};
 	uint8 display_mode_bits = 0;
+
+	// departure board filter
+	button_t bt_db_filter[3];
+	enum {
+		DB_SHOW_PAX   = 1 << 0,
+		DB_SHOW_MAIL  = 1 << 1,
+		DB_SHOW_GOODS = 1 << 2,
+		DB_SHOW_ALL = DB_SHOW_PAX | DB_SHOW_MAIL | DB_SHOW_GOODS
+	};
+	uint8 db_filter_bits = DB_SHOW_ALL;
+
 	void update_cont_departure();
 
 	// other UI definitions

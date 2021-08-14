@@ -3213,13 +3213,17 @@ void vehicle_t::display_after(int xpos, int ypos, bool is_global) const
 		ypos += tile_raster_scale_y(get_yoff(), raster_width) + 14;
 
 		// convoy(line) nameplate
-		if (cnv && (env_t::show_cnv_nameplates == 3 || (env_t::show_cnv_nameplates == 2 && cnv->get_owner() == welt->get_active_player())
-			|| ((env_t::show_cnv_nameplates == 1 || env_t::show_cnv_nameplates == 2) && welt->get_zeiger()->get_pos() == get_pos()) ))
+		if (cnv && (env_t::show_cnv_nameplates%4 == 3 || (env_t::show_cnv_nameplates%4 == 2 && cnv->get_owner() == welt->get_active_player())
+			|| ((env_t::show_cnv_nameplates%4 == 1 || env_t::show_cnv_nameplates%4 == 2) && welt->get_zeiger()->get_pos() == get_pos()) ))
 		{
 			char nameplate_text[1024];
 			// show the line name, including when the convoy is coupled.
 			linehandle_t lh = cnv->get_line();
-			if (lh.is_bound()) {
+			if (env_t::show_cnv_nameplates & 4 ) {
+				// convoy ID
+				sprintf(nameplate_text, "%u", cnv->self.get_id());
+			}
+			else if (lh.is_bound()) {
 				// line name
 				tstrncpy(nameplate_text, lh->get_name(), lengthof(nameplate_text));
 			}
@@ -3229,10 +3233,26 @@ void vehicle_t::display_after(int xpos, int ypos, bool is_global) const
 			}
 			const PIXVAL col_val = color_idx_to_rgb(lh.is_bound() ? cnv->get_owner()->get_player_color1()+3 : cnv->get_owner()->get_player_color1()+1);
 
-			const int width = proportional_string_width(nameplate_text) + 7;
+			const int width = proportional_string_width(nameplate_text)+7;
 			if (ypos > LINESPACE + 32 && ypos + LINESPACE < display_get_clip_wh().yy) {
-				display_ddd_proportional_clip(xpos, ypos - LOADINGBAR_HEIGHT - WAITINGBAR_HEIGHT - LINESPACE/2-2, width, 0, col_val, color_idx_to_rgb(COL_WHITE), nameplate_text, true);
-				// (*)display_ddd_proportional_clip's height is LINESPACE/2+1+1
+				const scr_coord_val yoff = LOADINGBAR_HEIGHT + WAITINGBAR_HEIGHT + LINESPACE/2 + 2;
+				if (env_t::show_cnv_nameplates & 4) {
+					const int bar_height     = LINEASCENT+4;
+					const int bar_width_half = (width+bar_height)/4*2+2;
+					scr_coord_val idplate_yoff = ypos - LOADINGBAR_HEIGHT - WAITINGBAR_HEIGHT - bar_height;
+					display_veh_form_wh_clip_rgb(xpos,                  idplate_yoff,     bar_width_half+1, bar_height,   color_idx_to_rgb(COL_WHITE), true, false, vehicle_desc_t::can_be_head, HAS_POWER | BIDIRECTIONAL);
+					display_veh_form_wh_clip_rgb(xpos+1,                idplate_yoff+1,   bar_width_half,   bar_height-2, col_val, true, false, vehicle_desc_t::can_be_head, HAS_POWER | BIDIRECTIONAL);
+					display_veh_form_wh_clip_rgb(xpos+1+bar_width_half, idplate_yoff,     bar_width_half+1, bar_height,   color_idx_to_rgb(COL_WHITE), true, true,  vehicle_desc_t::can_be_head|vehicle_desc_t::can_be_tail, HAS_POWER | BIDIRECTIONAL);
+					display_veh_form_wh_clip_rgb(xpos+1+bar_width_half, idplate_yoff+1,   bar_width_half,   bar_height-2, col_val, true, true,  vehicle_desc_t::can_be_head|vehicle_desc_t::can_be_tail, HAS_POWER | BIDIRECTIONAL);
+					if (LINESPACE-LINEASCENT>4) {
+						idplate_yoff -= (LINESPACE-LINEASCENT-4);
+					}
+					display_proportional_clip_rgb(xpos+(bar_width_half*2-width+7+2)/2, idplate_yoff+1, nameplate_text, ALIGN_LEFT, color_idx_to_rgb(COL_WHITE), true);
+				}
+				else {
+					display_ddd_proportional_clip(xpos, ypos-yoff, width, 0, col_val, color_idx_to_rgb(COL_WHITE), nameplate_text, true);
+					// (*)display_ddd_proportional_clip's height is LINESPACE/2+1+1
+				}
 			}
 		}
 
