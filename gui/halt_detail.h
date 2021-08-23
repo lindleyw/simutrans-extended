@@ -205,7 +205,7 @@ private:
 	uint32 cached_convoy_count;
 	uint32 old_factory_count, old_catg_count;
 	uint32 update_time;
-	scr_coord_val cashed_size_y;
+	scr_coord_val cached_size_y;
 	static sint16 tabstate;
 	bool show_pas_info, show_freight_info;
 

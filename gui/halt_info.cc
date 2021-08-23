@@ -594,7 +594,7 @@ void halt_info_t::init(halthandle_t halt)
 		freight_sort_selector.new_component<gui_scrolled_list_t::const_text_scrollitem_t>(translator::translate(sort_text[i]), SYSCOL_TEXT);
 	}
 	uint8 sort_mode = env_t::default_sortmode;
-	// 9 and 10 are sort modes for covonvoi, but 11 is for halt
+	// 9 and 10 are sort modes for convoi, but 11 is for halt
 	halt->set_sortby(sort_mode >= by_line ? env_t::default_sortmode + 2 : env_t::default_sortmode);
 	freight_sort_selector.set_selection(sort_mode);
 	freight_sort_selector.set_focusable(true);

@@ -78,7 +78,7 @@ void halt_detail_t::init()
 	old_factory_count = 0;
 	old_catg_count = 0;
 	cached_active_player=NULL;
-	cashed_size_y = 0;
+	cached_size_y = 0;
 	show_pas_info = false;
 	show_freight_info = false;
 
@@ -337,8 +337,8 @@ void halt_detail_t::update_components()
 	}
 
 	// tab1
-	if (cashed_size_y != pas.get_size().h) {
-		cashed_size_y = pas.get_size().h;
+	if (cached_size_y != pas.get_size().h) {
+		cached_size_y = pas.get_size().h;
 		if (tabstate==0) {
 			set_tab_opened();
 		}
@@ -588,7 +588,7 @@ void halt_detail_t::set_tab_opened()
 	{
 		case 0: // pas
 		default:
-			set_windowsize(scr_size(get_windowsize().w, min(display_get_height() - margin_above_tab, margin_above_tab + cashed_size_y)));
+			set_windowsize(scr_size(get_windowsize().w, min(display_get_height() - margin_above_tab, margin_above_tab + cached_size_y)));
 			break;
 		case 1: // goods
 			set_windowsize(scr_size(get_windowsize().w, min(display_get_height() - margin_above_tab, margin_above_tab + cont_goods.get_size().h)));
