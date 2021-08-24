@@ -87,6 +87,7 @@ void crossing_t::state_changed()
 
 /**
  * Dient zur Neuberechnung des Bildes
+ * ("Used to recalculate the image" - Babelfish)
  */
 void crossing_t::calc_image()
 {

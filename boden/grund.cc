@@ -1981,7 +1981,7 @@ sint64 grund_t::neuen_weg_bauen(weg_t *weg, ribi_t::ribi ribi, player_t *player,
 			}
 
 			// add the way
-			objlist.add( weg );
+			objlist.add(weg);
 			weg->set_ribi(ribi);
 			weg->set_pos(pos);
 			flags |= has_way2;
@@ -1995,6 +1995,11 @@ sint64 grund_t::neuen_weg_bauen(weg_t *weg, ribi_t::ribi ribi, player_t *player,
 				}
 				else
 				{
+					// If this crossing is a ford type (waytype no. 2 = water; topspeed no. 2 = 0), only allow crossing unnavigable rivers
+					if (cr_desc->get_waytype(1) == water_wt && cr_desc->get_maxspeed(1) == 0 && other->get_max_speed() > 0)
+					{
+						dbg->error("crossing_t::crossing_t()", "Fording a navigable river");
+					}
 					crossing_t* cr = new crossing_t(obj_bei(0)->get_owner(), pos, cr_desc, ribi_t::is_straight_ns(get_weg(cr_desc->get_waytype(1))->get_ribi_unmasked()));
 					objlist.add(cr);
 					cr->finish_rd();
