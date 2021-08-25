@@ -1,5 +1,0 @@
-#/bin/bash
-nice make -j5
-# cp -a build/default/simutrans-extended ~/simutrans/sim-ext/
-cp -a simutrans-extended ~/simutrans/sim-ext/
-rsync -av simutrans/text/ /home/billl/simutrans/sim-ext/text/
