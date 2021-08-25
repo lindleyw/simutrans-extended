@@ -8,16 +8,15 @@
 
 
 #include "gui_frame.h"
-#include "components/gui_label.h"
-#include "components/gui_textinput.h"
-#include "components/gui_combobox.h"
-#include "components/gui_button.h"
 #include "components/action_listener.h"
-#include "components/gui_scrollpane.h"
+#include "components/gui_button.h"
+#include "components/gui_combobox.h"
 #include "components/gui_convoy_assembler.h"
-#include "../simtypes.h"
-#include "../simdepot.h"
+#include "components/gui_label.h"
+#include "components/gui_scrollpane.h"
 #include "components/gui_speedbar.h"
+#include "components/gui_textinput.h"
+#include "../simdepot.h"
 #include "../simtypes.h"
 #include "../utils/cbuffer_t.h"
 

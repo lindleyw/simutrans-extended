@@ -53,6 +53,21 @@ void gui_colorbox_t::draw(scr_coord offset)
 
 
 
+gui_right_pointer_t::gui_right_pointer_t(PIXVAL c, uint8 height_)
+{
+	height = height_;
+	color = c;
+	tooltip = NULL;
+	gui_component_t::set_size(scr_size(height, height));
+}
+
+void gui_right_pointer_t::draw(scr_coord offset)
+{
+	offset += pos;
+	display_right_pointer_rgb(offset.x, offset.y, height, color, true);
+}
+
+
 gui_vehicle_bar_t::gui_vehicle_bar_t(PIXVAL c, scr_size size)
 {
 	color = c;
@@ -91,4 +106,3 @@ void gui_vehicle_number_t::draw(scr_coord offset)
 	display_veh_form_wh_clip_rgb(offset.x+size.w/2, offset.y+1, size.w/2-1, size.h-2, color, false, true,  flags_right, interactivity);
 	display_proportional_clip_rgb(offset.x+(size.w - proportional_string_width(buf))/2, offset.y+2, buf, ALIGN_LEFT, color_idx_to_rgb(COL_WHITE), false);
 }
-

@@ -51,7 +51,7 @@ protected:
 public:
 	gui_label_t(const char* text=NULL, PIXVAL color=SYSCOL_TEXT, align_t align=left);
 
-	void init( const char* text_par, scr_coord pos_par, PIXVAL color_par=SYSCOL_TEXT, align_t align_par=left) {
+	void init( const char* text_par, scr_coord pos_par=scr_coord(0,0), PIXVAL color_par=SYSCOL_TEXT, align_t align_par=left) {
 		set_pos  ( pos_par   );
 		set_text ( text_par  );
 		set_color( color_par );

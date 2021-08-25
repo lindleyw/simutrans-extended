@@ -1940,6 +1940,7 @@
     <ClCompile Include="io\rdwr\zlib_file_rdwr_stream.cc" />
     <ClCompile Include="io\rdwr\zstd_file_rdwr_stream.cc" />
     <ClCompile Include="sound\sdl2_mixer_sound.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug (non-graphical server)|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -2005,7 +2006,6 @@
     <ClCompile Include="gui\obj_info.cc" />
     <ClCompile Include="gui\privatesign_info.cc" />
     <ClCompile Include="gui\scenario_info.cc" />
-    <ClCompile Include="gui\schiene_info.cc" />
     <ClCompile Include="gui\server_frame.cc" />
     <ClCompile Include="gui\signal_info.cc" />
     <ClCompile Include="gui\simwin.cc" />
@@ -2517,6 +2517,7 @@
     <ClCompile Include="music\w32_midi.cc" />
     <ClCompile Include="descriptor\goods_desc.cc" />
     <ClCompile Include="boden\wasser.cc" />
+    <ClCompile Include="gui\way_info.cc" />
     <ClCompile Include="descriptor\reader\way_obj_reader.cc" />
     <ClCompile Include="descriptor\reader\way_reader.cc" />
     <ClCompile Include="boden\wege\weg.cc" />
@@ -2576,7 +2577,6 @@
     <ClInclude Include="gui\obj_info.h" />
     <ClInclude Include="gui\privatesign_info.h" />
     <ClInclude Include="gui\scenario_info.h" />
-    <ClInclude Include="gui\schiene_info.h" />
     <ClInclude Include="gui\server_frame.h" />
     <ClInclude Include="gui\signal_info.h" />
     <ClInclude Include="gui\simwin.h" />
@@ -2695,7 +2695,6 @@
     <ClInclude Include="gui\citylist_frame_t.h" />
     <ClInclude Include="gui\citylist_stats_t.h" />
     <ClInclude Include="gui\climates.h" />
-    <ClInclude Include="gui\colors.h" />
     <ClInclude Include="gui\convoi_detail_t.h" />
     <ClInclude Include="gui\convoi_filter_frame.h" />
     <ClInclude Include="gui\convoi_frame.h" />
@@ -2961,6 +2960,7 @@
     <ClInclude Include="bauer\goods_manager.h" />
     <ClInclude Include="boden\wasser.h" />
     <ClInclude Include="dataobj\way_constraints.h" />
+    <ClInclude Include="gui\way_info.h" />
     <ClInclude Include="descriptor\way_obj_desc.h" />
     <ClInclude Include="descriptor\reader\way_obj_reader.h" />
     <ClInclude Include="descriptor\writer\way_obj_writer.h" />

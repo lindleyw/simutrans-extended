@@ -409,7 +409,7 @@ With a big festival\n%s built\na new monument.\n%i citicens rejoiced.
 \n電化
 \nHeightfield has wrong image type.\n
 \nマップファイルの\nイメージ形式が不正です。\n
-\nis reserved by:
+is reserved by:
 優先列車：
 \nminimum speed:
 \n最低速度：
@@ -817,8 +817,8 @@ Convoi is sold when all wagons are empty.
 この編成を回送し、空車時に売却します。
 convoi mouseover tooltips
 マウスオーバーで車両の状態を表示
-convoi passed last\nmonth %i\n
-\n前月の交通量: %i\n―――――――――――
+convoi passed last month:
+前月交通量:
 Convois
 編成数
 Convois: %d\nProfit: %s
@@ -1263,8 +1263,6 @@ Leitung
 送電線
 length: %d
 建設距離: %d
-letzen Monat: diesen Monat:
-先月:　　　　　　　　　今月:
 Line
 路線
 Line Filter
@@ -1865,6 +1863,8 @@ Speedbonus\nroad %i km/h, rail %i km/h\nships %i km/h, planes %i km/h.
 速達ボーナス:\n        道路 %i km/h, 鉄道 %i km/h, \n        海路 %i km/h 空路 %i km/h.
 Speedlimit
 制限速度
+speed_restricted
+最高速度が制限されています
 Speichern
 ゲームの保存
 Spieler
@@ -2207,7 +2207,7 @@ Zu nah am Kartenrand
 #___________________________Simutrans Extended Texts____________________________
 #_________________________________program_text__________________________________
 #_________________________________program_text__________________________________
- %1.2f$/mon)
+ %1.2f$/mon
 %1.2f$/月
  from %s
  (%sから)
@@ -2237,10 +2237,6 @@ brakes from max. speed in %i m
 \n\n信用格付けに影響があります。
 \nCity:
 \n都市:
-\nMax. axle load:
-\n軸重制限:
-\nMax. weight:
-重量制限:
 \nMAY USE:
 \n通行可能:
 \nMUST USE:
@@ -2962,8 +2958,6 @@ one_train_staff
 one_way_sign
 一方通行標識
 Open countryside
-市域外
-open countryside
 市域外
 Open water
 水上
@@ -3690,7 +3684,7 @@ Return the vehicle(s) for a full refund.
 Sell the convoy for %s
 編成を %s にて売却します
 Congestion: %i%%
-混雑度： %i%%
+混雑度:  %i%%
 Display loaded detail
 積載情報の詳細を表示
 Displays detailed information of the vehicle's load.
@@ -4105,6 +4099,14 @@ Show producers
 資材・製品を生産する産業を表示します
 Show consumers
 資材・製品を消費する産業を表示します
+Municipal way
+市道
+Private way
+私道
+%u cities
+都市へのルート(%u)：
+%u buildings
+ランドマーク／産業へのルート(%u)：
 #_______________________________unnecessary_text________________________________
 #_______________________________unnecessary_text________________________________
 100 km/h = %i tiles/month
@@ -4115,10 +4117,10 @@ Passengers %d %c, %d %c, %d no route
 旅客の評価 %d %c, %d %c, %d 経路無し
 Passengers %d %s, %d %s, %d no route
 旅客の評価 %d %s, %d %s, %d 経路無し
-Passengers %d %c, %d %c, %d no route, %d too slow
-旅客の評価 %d %c, %d %c, %d 経路無し, %d 許容時間超過
-Passengers %d %s, %d %s, %d no route, %d too slow
-旅客の評価 %d %s, %d %s, %d 経路無し, %d 許容時間超過
+#Passengers %d %c, %d %c, %d no route, %d too slow
+#旅客の評価 %d %c, %d %c, %d 経路無し, %d 許容時間超過
+#Passengers %d %s, %d %s, %d no route, %d too slow
+#旅客の評価 %d %s, %d %s, %d 経路無し, %d 許容時間超過
 Unhappy
 不幸せ
 The number of passengers who have left because of overcrowding or excess waiting
@@ -4127,8 +4129,6 @@ Arbeiter aus:
 労働者居住地:
 No Route
 経路無し
-Welcome to Simutrans-Experimental, a game created by Hj. Malthaner and the Simutrans community, and modified by James E. Petts and the Simutrans community
-ようこそSimutrans-Extendedへ! Simutrans-StandardはHj. MalthanerとSimutransコミュニティによって開発されました。Simutrans-ExtendedはSimutrans-Standardを元にしてJames E. PettsとSimutransコミュニティによって開発されました。
 Usage/Output
 使用量/発電量
 Vehicle Name
@@ -4173,3 +4173,9 @@ Power: %4d kW\n
 #所要
 #cl_txt_sort
 #並び替え:
+#letzen Monat: diesen Monat:
+#先月:　　　　　　　　　今月:
+#\nMax. axle load:
+#\n軸重制限:
+#\nMax. weight:
+#重量制限:

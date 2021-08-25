@@ -53,11 +53,6 @@ public:
 	schiene_t();
 
 	/**
-	* @param[out] buf additional info is reservation!
-	*/
-	void info(cbuffer_t & buf) const OVERRIDE;
-
-	/**
 	* true, if this rail can be reserved
 	*/
 	bool can_reserve(convoihandle_t c, ribi_t::ribi dir, reservation_type rt = block, bool check_directions_at_junctions = false) const
@@ -129,8 +124,6 @@ public:
 
 	void rotate90() OVERRIDE;
 
-	void show_info() OVERRIDE;
-
 	/**
 	 * if a function return here a value with TRANSPARENT_FLAGS set
 	 * then a transparent outline with the color form the lower 8 Bit is drawn
@@ -166,35 +159,6 @@ public:
 	 */
 	virtual image_id get_outline_image() const OVERRIDE { return weg_t::get_image(); }
 
-	uint8 get_textlines() const { return textlines_in_info_window; }
-
-	static const char* get_working_method_name(working_method_t wm)
-	{
-		switch (wm)
-		{
-		case drive_by_sight:
-			return "drive_by_sight";
-		case time_interval:
-			return "time_interval";
-		case absolute_block:
-			return "absolute_block";
-		case token_block:
-			return "token_block";
-		case track_circuit_block:
-			return "track_circuit_block";
-		case cab_signalling:
-			return "cab_signalling";
-		case moving_block:
-			return "moving_block";
-		case one_train_staff:
-			return "one_train_staff";
-		case time_interval_with_telegraph:
-			return "time_interval_with_telegraph";
-		default:
-			return "unknown";
-		};
-	}
-
 	static const char* get_reservation_type_name(reservation_type rt)
 	{
 		switch (rt)
@@ -206,34 +170,6 @@ public:
 			return "directional_reservation";
 		case priority:
 			return "priority_reservation";
-		};
-	}
-	static const char* get_directions_name(ribi_t::ribi dir)
-	{
-		switch (dir)
-		{
-		case 1:
-			return "north";
-		case 2:
-			return "east";
-		case 3:
-			return "north_east";
-		case 4:
-			return "south";
-		case 5:
-			return "north_south";
-		case 6:
-			return "south_east";
-		case 8:
-			return "west";
-		case 9:
-			return "north_west";
-		case 10:
-			return "east_west";
-		case 12:
-			return "south_west";
-		default:
-			return "unknown";
 		};
 	}
 };

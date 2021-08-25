@@ -434,6 +434,10 @@ void display_right_triangle_rgb(scr_coord_val, scr_coord_val, scr_coord_val, con
 {
 }
 
+void display_right_pointer_rgb(scr_coord_val, scr_coord_val, uint8, const PIXVAL, const bool)
+{
+}
+
 int display_fluctuation_triangle_rgb(scr_coord_val, scr_coord_val, uint8, const bool, sint64)
 {
 	return 0;

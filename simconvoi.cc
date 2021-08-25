@@ -7346,7 +7346,7 @@ bool convoi_t::can_overtake(overtaker_t *other_overtaker, sint32 other_speed, si
 			strasse_t *str=(strasse_t *)gr->get_weg(road_wt);
 			if(  str==NULL  ) {
 				return false;
-			}else if(  akt_speed < fmin(get_max_power_speed(), str->get_max_speed())/2  &&  diff_speed >= kmh_to_speed(0)  ){
+			}else if(  akt_speed < fmin(get_max_power_speed(), str->get_max_speed(is_electric))/2  &&  diff_speed >= kmh_to_speed(0)  ){
 				//Warning: diff_speed == 0 is acceptable. We must consider the case diff_speed == 0.
 				in_congestion = true;
 			}else{
@@ -7428,7 +7428,7 @@ bool convoi_t::can_overtake(overtaker_t *other_overtaker, sint32 other_speed, si
 			return false;
 		}
 		// street gets too slow (TODO: should be able to be correctly accounted for)
-		if(  overtaking_mode_loop >= twoway_mode  &&  akt_speed > kmh_to_speed(str->get_max_speed())  ) {
+		if(  overtaking_mode_loop >= twoway_mode  &&  akt_speed > kmh_to_speed(str->get_max_speed(is_electric))  ) {
 			return false;
 		}
 
@@ -7499,13 +7499,13 @@ bool convoi_t::can_overtake(overtaker_t *other_overtaker, sint32 other_speed, si
 
 		if(  ribi_t::is_straight(str->get_ribi())  ) {
 			// The code from Standard can produce a division be zero error.
-			if (kmh_to_speed(str->get_max_speed()) > 0)
+			if (kmh_to_speed(str->get_max_speed(is_electric)) > 0)
 			{
-				time_overtaking -= (VEHICLE_STEPS_PER_TILE << 16) / kmh_to_speed(str->get_max_speed());
+				time_overtaking -= (VEHICLE_STEPS_PER_TILE << 16) / kmh_to_speed(str->get_max_speed(is_electric));
 			}
 		}
 		else {
-			time_overtaking -= (vehicle_base_t::get_diagonal_vehicle_steps_per_tile()<<16) / kmh_to_speed(str->get_max_speed());
+			time_overtaking -= (vehicle_base_t::get_diagonal_vehicle_steps_per_tile()<<16) / kmh_to_speed(str->get_max_speed(is_electric));
 		}
 
 		// Check for other vehicles in facing direction

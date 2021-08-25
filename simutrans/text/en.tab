@@ -3728,8 +3728,8 @@ Convoi is sold when all wagons are empty.
 The vehicle will be sold as soon as it is completely empty.
 Convoi is sent to depot when all wagons are empty.
 The convoy will be sent to the nearest depot as soon as it is completely empty.
-convoi passed last\nmonth %i\n
-\nConvoys that passed in the previous month: %i\n
+convoi passed last month:
+Passed here last month:
 Convois: %d\nProfit: %s
 Vehicles: %d\nProfit: %s
 Convoys
@@ -4762,8 +4762,8 @@ Hide all buildings
 \nElectrified\n
 \nHeightfield has wrong image type.\n
 \nHeightfield has wrong image type.\n
-\nis reserved by:
-\nReserved by: 
+is reserved by:
+Reserved by: 
 \nminimum speed:
 \nMinimum speed: 
 \nnot elektrified
@@ -6144,3 +6144,7 @@ name_plate
 Line
 Invalid filter
 Invalid filter
+Road routes from here:
+Road routes from here
+speed_restricted
+The speed of this way is restricted for reasons other than the nature of the way itself, e.g. by being in a built-up area.

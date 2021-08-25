@@ -5277,6 +5277,22 @@ void display_right_triangle_rgb(scr_coord_val x, scr_coord_val y, scr_coord_val 
 	}
 }
 
+void display_right_pointer_rgb(scr_coord_val x, scr_coord_val y, uint8 height, const PIXVAL colval, const bool dirty)
+{
+	uint8 width = height - height % 2;
+	for (uint16 i = 0; i < height; i++)
+	{
+		uint8 xoff = (height/2 - abs(i-height/2))/2;
+		uint8 w    = (height/2 - abs(i-height/2))*2;
+
+		display_fillbox_wh_clip_rgb(x+xoff+1, y+i, w-xoff, 1, colval, dirty);
+		if (i != height /2) {
+			display_blend_wh_rgb(x+xoff+1+w-xoff, y+i, 1, 1, colval, 50);
+		}
+	}
+}
+
+
 int display_fluctuation_triangle_rgb(scr_coord_val x, scr_coord_val y, uint8 height, const bool dirty, sint64 value)
 {
 	if (!value) { return 0; } // nothing to draw

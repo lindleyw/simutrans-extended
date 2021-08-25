@@ -19,16 +19,17 @@
  */
 class gui_colorbox_t : public gui_component_t
 {
-	PIXVAL color;
-
 	scr_coord_val height = D_INDICATOR_HEIGHT;
 	scr_coord_val width = D_INDICATOR_WIDTH;
 	bool size_fixed = false;
 	bool show_frame = true;
 
+	scr_size max_size;
+
+protected:
+	PIXVAL color;
 	const char * tooltip;
 
-	scr_size max_size;
 public:
 	gui_colorbox_t(PIXVAL c = 0);
 
@@ -60,6 +61,28 @@ public:
 	{
 		max_size = s;
 	}
+};
+
+
+/**
+ * Draws a simple right triangle arrow.
+ */
+class gui_right_pointer_t : public gui_colorbox_t
+{
+	uint8 height;
+
+public:
+	gui_right_pointer_t(PIXVAL c = SYSCOL_TEXT, uint8 height_ = (LINESPACE*3)>>2);
+
+	void init(PIXVAL color_par, scr_size size) {
+		set_color(color_par);
+		set_size(size);
+	}
+
+	void draw(scr_coord offset) OVERRIDE;
+
+	scr_size get_min_size() const OVERRIDE { return gui_component_t::size; };
+	scr_size get_max_size() const OVERRIDE { return get_min_size(); }
 };
 
 

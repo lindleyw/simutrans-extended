@@ -44,6 +44,7 @@
 #include "../obj/wayobj.h"
 
 #include "../gui/ground_info.h"
+#include "../gui/way_info.h"
 #include "../gui/minimap.h"
 
 #include "../tpl/inthashtable_tpl.h"
@@ -584,7 +585,12 @@ void grund_t::show_info()
 			return;
 		}
 	}
-	if(env_t::ground_info  ||  hat_wege()) {
+	// has way
+	if (hat_wege()) {
+		create_win(new way_info_t(this), w_info, (ptrdiff_t)this);
+		return;
+	}
+	if(env_t::ground_info) {
 		create_win(new grund_info_t(this), w_info, (ptrdiff_t)this);
 	}
 }
@@ -662,7 +668,7 @@ void grund_t::info(cbuffer_t& buf) const
 	if (!is_water())
 	{
 		char price[64];
-		money_to_string(price, abs(welt->get_land_value(pos)));
+		money_to_string(price, abs(welt->get_land_value(pos))/100.0);
 		buf.printf("%s: %s\n", translator::translate("Land value"), price);
 		if (!has_way || (flags&has_way1 && get_weg_nr(0)->is_degraded()) || (flags&has_way2 && get_weg_nr(1)->is_degraded()))
 		{
