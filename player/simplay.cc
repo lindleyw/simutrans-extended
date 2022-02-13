@@ -1274,7 +1274,6 @@ sint64 player_t::calc_takeover_cost() const
         }
 
 	cost = (assets > liabilities) ? assets : liabilities;
-        printf("Assets=%10d (%10d of which is non-cash), Liabilities=%10d, Cost=%10d\n", assets, finance->get_financial_assets(), liabilities, cost);
 	return cost;
 }
 
