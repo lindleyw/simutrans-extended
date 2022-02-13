@@ -1025,13 +1025,12 @@ void gebaeude_t::info(cbuffer_t & buf) const
 			buf.printf("%s%u", translator::translate("\nBauzeit bis"), h.get_retire_year_month() / 12);
 		}
 		buf.append("\n");
-		if (get_owner() == NULL) {
-			buf.append(translator::translate("Wert"));
-			buf.append(": ");
-			// The land value calculation below will need modifying if multi-tile city buildings are ever introduced.
-			buf.append(-(welt->get_land_value(get_pos())*(tile->get_desc()->get_level()) / 100) * 5);
-			buf.append("$\n");
-		}
+
+		buf.append(translator::translate("Wert"));
+		buf.append(": ");
+		// The land value calculation below will need modifying if multi-tile city buildings are ever introduced.
+		buf.append(-(welt->get_land_value(get_pos())*(tile->get_desc()->get_level()) / 100) * 5);
+		buf.append("$\n");
 
 		if (char const* const maker = tile->get_desc()->get_copyright()) {
 			buf.printf(translator::translate("Constructed by %s"), maker);
