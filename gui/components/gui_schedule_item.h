@@ -17,7 +17,7 @@
 #include "../../player/simplay.h"
 
 
-#define L_CONVOY_ARROW_WIDTH (LINESPACE*0.7+6)
+#define L_CONVOY_ARROW_WIDTH (LINESPACE*0.8)
 //#define L_CONVOY_ARROW_HEIGHT (LINESPACE)
 //#define L_CONVOY_ARROW_SIZE (scr_size(L_CONVOY_ARROW_WIDTH, L_CONVOY_ARROW_HEIGHT))
 
@@ -125,11 +125,11 @@ class gui_convoy_arrow_t : public gui_component_t
 	PIXVAL color;
 	bool reverse;
 
-	scr_size padding = scr_size(3, 0);
+	scr_size padding = scr_size(2, 0);
 
 public:
 
-	gui_convoy_arrow_t(PIXVAL color=COL_SAFETY, bool reverse=false, scr_size size = scr_size(L_CONVOY_ARROW_WIDTH, LINESPACE));
+	gui_convoy_arrow_t(PIXVAL color=COL_SAFETY, bool reverse=false, scr_size size = scr_size(L_CONVOY_ARROW_WIDTH+4, LINESPACE));
 
 	void draw(scr_coord offset) OVERRIDE;
 
