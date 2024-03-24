@@ -2955,6 +2955,44 @@ uint32 haltestelle_t::get_ware_summe(const goods_desc_t *wtyp, linehandle_t line
 	return sum;
 }
 
+uint32 haltestelle_t::get_ware_summe_for(const goods_desc_t *wtyp, linehandle_t line, uint8 wealth_class, uint8 entry_start, uint8 entry_end) const
+{
+	int sum = 0;
+	const vector_tpl<ware_t> * warray = cargo[wtyp->get_catg_index()];
+	if(warray!=NULL) {
+		slist_tpl<halthandle_t> halt_list;
+		if (const schedule_t *schedule = line.is_bound() ? line->get_schedule() : NULL) {
+			uint16 to = (uint16)entry_end;
+			to = min(entry_end + 1, schedule->entries.get_count());
+			if (to < (uint16)entry_start) {
+				to += schedule->entries.get_count();
+			}
+
+			for (uint16 i = entry_start; i < to; i++) {
+				const uint16 check_index = i % schedule->entries.get_count();
+				const halthandle_t halt = haltestelle_t::get_halt(schedule->entries[check_index].pos, line->get_owner());
+				if (halt.is_bound() && halt != self) {
+					halt_list.append_unique(halt);
+				}
+			}
+		}
+		FOR(vector_tpl<ware_t>, const& i, *warray) {
+			if (wtyp->get_index() == i.get_index()) {
+				if (wealth_class !=255  &&  wealth_class != i.get_class()) {
+					continue;
+				}
+				halthandle_t const via_halt = i.get_zwischenziel();
+				if ( via_halt.is_bound() && halt_list.is_contained(via_halt) ) {
+					if(  line == get_preferred_line(via_halt, wtyp->get_catg_index(), goods_manager_t::get_classes_catg_index(wtyp->get_index())-1)  ) {
+						sum += i.menge;
+					}
+				}
+			}
+		}
+	}
+	return sum;
+}
+
 
 uint32 haltestelle_t::get_transferring_goods_sum(const goods_desc_t *wtyp, uint8 g_class) const
 {
