@@ -141,10 +141,10 @@ gui_halt_waiting_catg_t::gui_halt_waiting_catg_t(halthandle_t h, uint8 catg, lin
 	catg_index = catg;
 	divide_by_class = yesno;
 	start_entry = start;
-	this_entry = this_entry_;
-	end_entry = end;
+	this_entry = this_entry_ ==255 ? end : this_entry_;
+	end_entry = this_entry_==255 ? 255 : end;
 	set_table_layout(1,1);
-	set_size(scr_size(D_LABEL_WIDTH, (line.is_bound() && this_entry > 0 && end_entry > 0) ? D_LABEL_HEIGHT*2+D_V_SPACE : D_LABEL_HEIGHT));
+	set_size(scr_size(D_LABEL_WIDTH, (line.is_bound() && this_entry && this_entry != end_entry-1 && line->get_schedule()->is_mirrored()) ? D_LABEL_HEIGHT*2+D_V_SPACE : D_LABEL_HEIGHT));
 	update();
 }
 
@@ -166,10 +166,13 @@ void gui_halt_waiting_catg_t::update()
 		end_table();
 	}
 	else {
-		const bool both_directions= line.is_bound() && this_entry>0 && end_entry>0;
+		const bool check_direction = line.is_bound() && end_entry;
+		const bool both_directions = check_direction && line->get_schedule()->is_mirrored() && this_entry && this_entry != end_entry-1;
 		bool overcrowded = (halt->get_status_color(catg_index == goods_manager_t::INDEX_PAS ? 0 : catg_index == goods_manager_t::INDEX_MAIL ? 1 : 2) == SYSCOL_OVERCROWDED);
 		for (uint8 dir = 0; dir < 2; dir++) {
 			if (dir==1 && !both_directions) break;
+
+			uint8 to = both_directions ? dir==0 ? this_entry - 1 : end_entry : this_entry;
 			add_table(0, 1)->set_spacing(scr_size(0,D_V_SPACE>>1));
 			{
 				bool got_one = false;
@@ -178,7 +181,7 @@ void gui_halt_waiting_catg_t::update()
 					if (wtyp->get_catg_index() != catg_index) {
 						continue;
 					}
-					const uint32 sum = both_directions ? halt->get_ware_summe_for(wtyp, line, 255, dir ? this_entry + 1 : start_entry, dir ? end_entry : this_entry - 1)
+					const uint32 sum = check_direction ? halt->get_ware_summe_for(wtyp, line, 255, dir ? this_entry + 1 : start_entry, to)
 						: line.is_bound() ? halt->get_ware_summe(wtyp, line) : halt->get_ware_summe(wtyp);
 					if (sum > 0) {
 						if (got_one) {
@@ -196,7 +199,7 @@ void gui_halt_waiting_catg_t::update()
 						if (divide_by_class && number_of_classes>1) {
 							bool got_one_class = false;
 							for (uint8 wealth = 0; wealth<number_of_classes; wealth++) {
-								const uint32 csum = both_directions ? halt->get_ware_summe_for(wtyp, line, number_of_classes ? wealth : 255, dir ? this_entry+1 : start_entry, dir ? end_entry : this_entry-1)
+								const uint32 csum = check_direction ? halt->get_ware_summe_for(wtyp, line, number_of_classes ? wealth : 255, dir ? this_entry+1 : start_entry, to)
 									: line.is_bound() ? halt->get_ware_summe(wtyp, line, number_of_classes ? wealth:255) : halt->get_ware_summe(wtyp, wealth);
 								if (csum) {
 									if (got_one_class) lb->buf().append(", ");
@@ -317,6 +320,7 @@ void gui_line_waiting_status_t::init()
 					// 1st row
 					if( halt.is_bound() ) {
 						const bool both_directions = line_style==gui_colored_route_bar_t::doubled && entry_idx>0 && entry_idx< schedule->entries.get_count()-1;
+						minivec_tpl<uint8> entry_idx_of_this_stop;
 						add_table(1,0)->set_spacing(NO_SPACING);
 						{
 							if (both_directions) {
@@ -335,7 +339,7 @@ void gui_line_waiting_status_t::init()
 						end_table();
 
 						uint8 start_entry = both_directions ? entry_idx-1:0;
-						uint8 end_entry = both_directions ? entry_idx+1:0;
+						uint8 end_entry = both_directions ? entry_idx+1: schedule->entries.get_count();
 						if (both_directions) {
 
 							for (; start_entry > 0; start_entry--) {
@@ -352,6 +356,21 @@ void gui_line_waiting_status_t::init()
 									end_entry--;
 									break;
 								}
+							}
+						}
+						else if (line_style != gui_colored_route_bar_t::doubled) {
+							start_entry = (entry_idx+1)%schedule->entries.get_count();
+							for (uint8 j = 0; j < schedule->entries.get_count(); j++) {
+								halthandle_t entry_halt = haltestelle_t::get_halt(schedule->entries[j].pos, line->get_owner());
+								if (halt == entry_halt) {
+									entry_idx_of_this_stop.append(j);
+									if (j > entry_idx) {
+										end_entry = min(j, end_entry); break;
+									}
+								}
+							}
+							if (entry_idx_of_this_stop.get_count()>1 && end_entry == schedule->entries.get_count()) {
+								end_entry = (entry_idx_of_this_stop[0]+schedule->entries.get_count()-1)% schedule->entries.get_count();
 							}
 						}
 
@@ -371,7 +390,8 @@ void gui_line_waiting_status_t::init()
 
 						for (uint8 catg_index = 0; catg_index < goods_manager_t::get_max_catg_index(); catg_index++) {
 							if (line->get_goods_catg_index().is_contained(catg_index)) {
-								new_component<gui_halt_waiting_catg_t>(halt, catg_index, filter_by_line ? line : linehandle_t(), divide_by_class, start_entry, both_directions ? entry_idx:0, end_entry);
+								new_component<gui_halt_waiting_catg_t>(halt, catg_index, filter_by_line ? line : linehandle_t(), divide_by_class,
+									start_entry, entry_idx_of_this_stop.get_count() > 1 ? 255 : entry_idx, end_entry);
 							}
 						}
 					}
