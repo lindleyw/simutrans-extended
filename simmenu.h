@@ -189,6 +189,7 @@ enum {
 	DIALOG_TOOL_STANDARD_COUNT,
 	// Extended entries from here:
 	DIALOG_LIST_SIGNALBOX =0x0080,
+	DIALOG_PLAYER_RANKING,
 	DIALOG_TOOL_COUNT,
 	DIALOG_TOOL = 0x4000
 };
@@ -241,6 +242,9 @@ public:
 
 	sint16 ok_sound;
 
+	/// a script is waiting for a call-back
+	uint32 callback_id;
+
 	enum {
 		WFL_SHIFT  = 1 << 0, ///< shift-key was pressed when mouse-click happened
 		WFL_CTRL   = 1 << 1, ///< ctrl-key was pressed when mouse-click happened
@@ -288,6 +292,7 @@ public:
 		command_key = 0;
 		cursor_centered = false;
 		flags = 0;
+		callback_id = 0;
 	}
 
 	virtual ~tool_t() {}

@@ -1,5 +1,5 @@
 /*
- * This file is part of the Simutrans project under the Artistic License.
+ * This file is part of the Simutrans-Extended project under the Artistic License.
  * (see LICENSE.txt)
  */
 
@@ -23,6 +23,7 @@
 #include "../descriptor/vehicle_desc.h"
 
 #include "../utils/simstring.h"
+#include "../unicode.h"
 
 
 int vehiclelist_stats_t::sort_mode = vehicle_builder_t::sb_intro_date;

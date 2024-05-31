@@ -316,7 +316,7 @@ void gui_line_waiting_status_t::init()
 				uint8 entry_idx = 0;
 				for(auto const& i : schedule->entries){
 					halthandle_t const halt = haltestelle_t::get_halt(i.pos, line->get_owner());
-					uint8 line_style = schedule->is_mirrored() ? gui_colored_route_bar_t::doubled : gui_colored_route_bar_t::solid;
+					uint8 line_style = mirrored ? gui_colored_route_bar_t::doubled : gui_colored_route_bar_t::solid;
 					// 1st row
 					if( halt.is_bound() ) {
 						const bool both_directions = line_style==gui_colored_route_bar_t::doubled && entry_idx>0 && entry_idx< schedule->entries.get_count()-1;
@@ -445,7 +445,7 @@ void gui_line_waiting_status_t::init()
 					// 2nd row
 					if (entry_idx== schedule->entries.get_count()-1) {
 						if (mirrored) {
-							continue;
+							break;
 						}
 						else {
 							line_style = gui_colored_route_bar_t::dashed;

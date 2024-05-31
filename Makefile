@@ -72,7 +72,7 @@ else
 endif
 
 ifeq ($(OSTYPE),mac)
-  CFLAGS +=  -std=c++11 -stdlib=libc++
+  CFLAGS  += -stdlib=libc++
   LDFLAGS += -stdlib=libc++
 endif
 
@@ -84,13 +84,9 @@ else
   SOURCES += sys/clipboard_internal.cc
 endif
 
-ifeq ($(OSTYPE),openbsd)
-  CXXFLAGS +=  -std=c++11
-endif
-
 LIBS += -lbz2 -lz -lpng
 
-CXXFLAGS +=  -std=gnu++11
+CXXFLAGS += -std=c++14
 
 ifneq ($(OSTYPE),mingw)
  LIBS += -lbz2 -lz
@@ -363,7 +359,6 @@ SOURCES += display/simgraph$(COLOUR_DEPTH).cc
 SOURCES += display/simview.cc
 SOURCES += display/viewport.cc
 SOURCES += finder/placefinder.cc
-SOURCES += freight_list_sorter.cc
 SOURCES += gui/ai_option_t.cc
 SOURCES += gui/banner.cc
 SOURCES += gui/baum_edit.cc
@@ -385,8 +380,10 @@ SOURCES += gui/components/gui_container.cc
 SOURCES += gui/components/gui_convoiinfo.cc
 SOURCES += gui/components/gui_divider.cc
 SOURCES += gui/components/gui_obj_view_t.cc
+SOURCES += gui/components/gui_destination_building_info.cc
 SOURCES += gui/components/gui_factory_storage_info.cc
 SOURCES += gui/components/gui_halthandled_lines.cc
+SOURCES += gui/components/gui_halt_cargoinfo.cc
 SOURCES += gui/components/gui_fixedwidth_textarea.cc
 SOURCES += gui/components/gui_flowtext.cc
 SOURCES += gui/components/gui_image.cc
@@ -468,6 +465,7 @@ SOURCES += gui/overtaking_mode.cc
 SOURCES += gui/pakselector.cc
 SOURCES += gui/password_frame.cc
 SOURCES += gui/player_frame_t.cc
+SOURCES += gui/player_ranking_frame.cc
 SOURCES += gui/privatesign_info.cc
 SOURCES += gui/savegame_frame.cc
 SOURCES += gui/scenario_frame.cc
@@ -531,6 +529,7 @@ SOURCES += script/api_class.cc
 SOURCES += script/api_function.cc
 SOURCES += script/api_param.cc
 SOURCES += script/api/api_city.cc
+SOURCES += script/api/api_command.cc
 SOURCES += script/api/api_const.cc
 SOURCES += script/api/api_control.cc
 SOURCES += script/api/api_convoy.cc
@@ -542,6 +541,7 @@ SOURCES += script/api/api_line.cc
 SOURCES += script/api/api_map_objects.cc
 SOURCES += script/api/api_obj_desc.cc
 SOURCES += script/api/api_obj_desc_base.cc
+SOURCES += script/api/api_pathfinding.cc
 SOURCES += script/api/api_player.cc
 SOURCES += script/api/api_scenario.cc
 SOURCES += script/api/api_schedule.cc
@@ -554,6 +554,7 @@ SOURCES += script/api/get_next.cc
 SOURCES += script/dynamic_string.cc
 SOURCES += script/export_objs.cc
 SOURCES += script/script.cc
+SOURCES += script/script_loader.cc
 SOURCES += squirrel/sq_extensions.cc
 SOURCES += squirrel/squirrel/sqapi.cc
 SOURCES += squirrel/squirrel/sqclass.cc
@@ -790,3 +791,6 @@ makeobj:
 
 nettool:
 	$(Q)$(MAKE) -e -C nettools FLAGS="$(FLAGS)"
+test: simutrans
+	$(BUILDDIR)/$(PROG) -set_workdir $(shell pwd)/simutrans -objects pak -scenario automated-tests -debug 2 -lang en -fps 100
+

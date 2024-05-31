@@ -294,7 +294,7 @@ bool rail_vehicle_t::check_next_tile(const grund_t *bd) const
 
 
 // how expensive to go here (for way search)
-int rail_vehicle_t::get_cost(const grund_t *gr, const sint32 max_speed, koord from_pos)
+int rail_vehicle_t::get_cost(const grund_t *gr, const sint32 max_speed, ribi_t::ribi from)
 {
 	// first favor faster ways
 	const weg_t *w = gr->get_weg(get_waytype());
@@ -315,9 +315,8 @@ int rail_vehicle_t::get_cost(const grund_t *gr, const sint32 max_speed, koord fr
 	// effect of slope
 	if(  gr->get_weg_hang()!=0  ) {
 		// check if the slope is upwards relative to the previous tile
-		from_pos -= gr->get_pos().get_2d();
 		// 125 hardcoded, see get_cost_upslope()
-		costs += 125 * slope_t::get_sloping_upwards( gr->get_weg_hang(), from_pos.x, from_pos.y );
+		costs += 125 * get_sloping_upwards( gr->get_weg_hang(), from );
 	}
 
 	// Strongly prefer routes for which the vehicle is not overweight.
@@ -834,6 +833,7 @@ bool rail_vehicle_t::can_enter_tile(const grund_t *gr, sint32 &restart_speed, ui
  		}
 	}
 
+    assert(gr);
 	if(gr->get_top() > 250)
 	{
 		// too many objects here
@@ -2933,10 +2933,8 @@ sint32 rail_vehicle_t::block_reserver(route_t *route, uint16 start_index, uint16
 		halthandle_t train_halt = haltestelle_t::get_halt(cnv->get_pos(), cnv->get_owner());
 		halthandle_t signal_halt;
 
-		FOR(slist_tpl<grund_t*>, const g, signs)
-		{
-			if(signal_t* const signal = g->find<signal_t>())
-			{
+		for(grund_t* const g : signs) {
+			if (signal_t* const signal = g->find<signal_t>()) {
 				signal_halt = haltestelle_t::get_halt(g->get_pos(), cnv->get_owner());
 				if(((counter -- > 0 || (pre_signals.empty() && (!starting_at_signal || signs.get_count() == 1)) ||
 					(reached_end_of_loop && (early_platform_index == INVALID_INDEX ||

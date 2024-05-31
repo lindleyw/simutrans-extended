@@ -49,7 +49,9 @@ scr_size gui_scrollpane_t::get_min_size() const
 scr_size gui_scrollpane_t::get_max_size() const
 {
 	scr_size csize = take_cached_size ? cached_max_size : comp->get_max_size();
-	return (!b_show_scroll_y && min_height) ? scr_size(csize.w, min_height) : csize;
+	scr_coord_val c_width = !b_show_scroll_x ? max_width : csize.w;
+	scr_coord_val c_height = (!b_show_scroll_y && min_height) ? min_height : csize.h;
+	return scr_size(c_width, c_height);
 }
 
 
@@ -136,7 +138,7 @@ scr_size gui_scrollpane_t::request_size(scr_size request)
 
 
 /**
- * Events werden hiermit an die GUI-components gemeldet
+ * Events are notified to GUI components via this method gemeldet
  */
 bool gui_scrollpane_t::infowin_event(const event_t *ev)
 {

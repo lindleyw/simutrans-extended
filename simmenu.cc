@@ -216,6 +216,7 @@ const char *tool_t::id_to_string(uint16 id)
 		CASE_TO_STRING(DIALOG_EDIT_GROUNDOBJ);
 
 		CASE_TO_STRING(DIALOG_LIST_SIGNALBOX);
+		CASE_TO_STRING(DIALOG_PLAYER_RANKING);
 		}
 	}
 
@@ -383,6 +384,7 @@ tool_t *create_dialog_tool(int toolnr)
 		case DIALOG_SOUND:           tool = new dialog_sound_t();           break;
 		case DIALOG_LANGUAGE:        tool = new dialog_language_t();        break;
 		case DIALOG_PLAYERCOLOR:     tool = new dialog_playercolor_t();     break;
+		case DIALOG_PLAYER_RANKING:  tool = new dialog_player_ranking_t();  break;
 		case DIALOG_JUMP:            tool = new dialog_jump_t();            break;
 		case DIALOG_LOAD:            tool = new dialog_load_t();            break;
 		case DIALOG_SAVE:            tool = new dialog_save_t();            break;
@@ -1035,7 +1037,7 @@ void tool_t::update_toolbars()
 	// iterate twice, to get correct icons if a toolbar changes between empty and non-empty
 	for(uint j=0; j<2; j++) {
 		bool change = false;
-		FOR(vector_tpl<toolbar_t*>, const i, toolbar_tool) {
+		for(toolbar_t* const i : toolbar_tool) {
 			bool old_icon_empty = i->get_icon(welt->get_active_player()) == IMG_EMPTY;
 			i->update(welt->get_active_player());
 			change |= old_icon_empty ^ (i->get_icon(welt->get_active_player()) == IMG_EMPTY);
@@ -1147,7 +1149,7 @@ void toolbar_t::update(player_t *player)
 
 	tool_selector->reset_tools();
 	// now (re)fill it
-	FOR(slist_tpl<tool_t*>, const w, tools) {
+	for(tool_t* const w : tools) {
 		// no way to call this tool? => then it is most likely a metatool
 		if(w->command_key==1  &&  w->get_icon(player)==IMG_EMPTY) {
 
